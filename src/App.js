@@ -87,8 +87,8 @@ const RENOWN_RANKS = [
 
 const videos = [
   {
-    title: "Building a neat UI in 30 minutes",
-    link: "https://www.youtube.com/",
+    title: "alexinabox",
+    link: "https://alexinabox.de/",
   },
   {
     title: "Vite vs CRA: Speed comparison",
@@ -331,14 +331,14 @@ function App() {
           {/* Videos + Streams */}
           <section style={styles.gridTwo}>
             <div style={styles.card}>
-              <h2 style={styles.sectionTitle}>Latest videos</h2>
+              <h2 style={styles.sectionTitle}>Freunde</h2>
               <div style={{ display: "grid", gap: 10 }}>
                 {videos.map((v) => (
                     <a key={v.title} href={v.link} target="_blank" rel="noopener noreferrer" style={styles.videoRow}>
                       <Youtube size={18} style={{ color: ACCENT }} />
                       <div style={{ marginLeft: 10 }}>
                         <div style={{ color: TEXT, fontWeight: 600 }}>{v.title}</div>
-                        <div style={{ color: MUTED, fontSize: 13 }}>Watch on YouTube</div>
+                        <div style={{ color: MUTED, fontSize: 13 }}>Click!!</div>
                       </div>
                     </a>
                 ))}
