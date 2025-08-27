@@ -16,7 +16,10 @@ import {
   Trophy,
   Zap,
   Target,
-    Crosshair
+    Crosshair,
+    CircleUserRound,
+    Clock,
+    CircleDollarSign
 } from "lucide-react";
 
 /**
@@ -51,14 +54,14 @@ const projects = [
     link: "https://github.com/AlexInABox/grow-green",
   },
   {
-    title: "Project Two",
-    desc: "CLI tooling to automate builds and deployments for hobby projects.",
-    link: "https://github.com/lagopodus/project-two",
+    title: "Portfolio",
+    desc: "The page you are viewing right now.",
+    link: "https://github.com/lagopodus/portfolio",
   },
   {
-    title: "Tiny Library",
-    desc: "Published NPM package for a tiny utility used across several projects.",
-    link: "https://github.com/lagopodus/tiny-lib",
+    title: "Unreal Engine FPS Game",
+    desc: "Secret!!!!",
+    link: "https://github.com/lagopodus/ue5-fps-shooter",
   },
 ];
 
@@ -91,8 +94,8 @@ const videos = [
     link: "https://alexinabox.de/",
   },
   {
-    title: "Vite vs CRA: Speed comparison",
-    link: "https://www.youtube.com/",
+    title: "Theo",
+    link: "https://theocloud.dev/",
   },
 ];
 
@@ -197,9 +200,9 @@ function App() {
                 <h1 style={styles.name}>
                   Josh <span style={{ color: ACCENT }}>lagopodus</span>
                 </h1>
-                <p style={styles.tagline}>Frontend dev • Streamer • Open-source tinkerer</p>
+                <p style={styles.tagline}>Counter Strike • Computer Scienece • Car Stuff</p>
                 <p style={styles.location}>
-                  <MapPin size={14} style={{ marginRight: 8 }} /> Europe
+                  <MapPin size={14} style={{ marginRight: 8 }} /> Berlin
                 </p>
               </div>
             </div>
@@ -272,8 +275,9 @@ function App() {
               <div style={{ flex: 1, minWidth: 280 }}>
                 <h2 style={styles.sectionTitle}>About</h2>
                 <p style={styles.text}>
-                  I build clean, maintainable frontend apps and developer tools. I enjoy small libraries, fast DX with Vite,
-                  and streaming the process while explaining tradeoffs. I love purple themes.
+                    <i>„Ich fahr nicht gerne Motorrad, weil es cool ist, ich fahr gerne Motorrad, weil ich es gerne fahr.
+                    Basta. Abgesehen davon, fahr ich kein Motorrad.“<br /></i>
+                    <b>- Rainer Winkler</b>
                 </p>
 
                 <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -291,9 +295,8 @@ function App() {
               <div style={{ width: 320, minWidth: 260 }}>
                 <h3 style={{ ...styles.sectionTitle, marginBottom: 10 }}>Quick stats</h3>
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <Stat title="Open-source" value="12+" icon={<Star size={16} />} />
-                  <Stat title="Projects" value="8" icon={<Code size={16} />} />
-                  <Stat title="Streams" value="Weekly" icon={<Calendar size={16} />} />
+                  <Stat title="Hours played" value="2000+" icon={<Clock size={16} />} />
+                  <Stat title="Inventory worth" value="~3000$" icon={<CircleDollarSign size={16} />} />
                 </div>
               </div>
             </div>
@@ -335,7 +338,7 @@ function App() {
               <div style={{ display: "grid", gap: 10 }}>
                 {videos.map((v) => (
                     <a key={v.title} href={v.link} target="_blank" rel="noopener noreferrer" style={styles.videoRow}>
-                      <Youtube size={18} style={{ color: ACCENT }} />
+                      <CircleUserRound size={18} style={{ color: ACCENT }} />
                       <div style={{ marginLeft: 10 }}>
                         <div style={{ color: TEXT, fontWeight: 600 }}>{v.title}</div>
                         <div style={{ color: MUTED, fontSize: 13 }}>Click!!</div>
@@ -843,9 +846,9 @@ function LeetifyCard() {
                     padding: "12px 16px",
                     borderRadius: 12,
                     background: getPremierColor(profile.ranks.premier), // optional green background
-                    color: `rgba(0, 0, 0, 0.5)`, // simple darker text for contrast                    fontWeight: 900,
+                    color: `rgba(0, 0, 0, 0.5)`,
                     fontSize: 20,
-                    fontWeight: 1200,
+                    fontWeight: 900,
                     textAlign: "center",
                     minWidth: 80,
                   }}
@@ -872,32 +875,37 @@ function LeetifyCard() {
                         borderRadius: 10,
                       }}
                   >
-                    <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                    >
-                      <div style={{color: TEXT, fontWeight: 800}}>
-                        {recent.map_name ?? "—"}
-                      </div>
                       <div
                           style={{
-                            color: recent.outcome === "win" ? "#16a34a" : "#ef4444",
-                            fontWeight: 900,
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
                           }}
                       >
-                        {recent.outcome}
+                          <div style={{color: TEXT, fontWeight: 800}}>
+                              {recent.map_name ?? "—"}
+                          </div>
+                          <div
+                              style={{
+                                  color: recent.outcome === "win"
+                                      ? "#16a34a"       // green for win
+                                      : recent.outcome === "tie"
+                                          ? "#9ca3af"     // grey for tie
+                                          : "#ef4444",    // red for loss
+                                  fontWeight: 900,
+                              }}
+                          >
+                              {recent.outcome}
+                          </div>
+
                       </div>
-                    </div>
-                    <div>
-                      Score:{" "}
-                      {Array.isArray(recent.score)
-                          ? `${recent.score[0]} – ${recent.score[1]}`
-                          : "—"}
-                    </div>
-                    <div>
+                      <div>
+                          Score:{" "}
+                          {Array.isArray(recent.score)
+                              ? `${recent.score[0]} – ${recent.score[1]}`
+                              : "—"}
+                      </div>
+                      <div>
                       Rating:{" "}
                       {recent.leetify_rating > 0
                           ? `+${(recent.leetify_rating * 100).toFixed(1)}`
