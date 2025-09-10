@@ -8,8 +8,6 @@ import {
   Youtube,
   Twitch,
   Twitter,
-  BookOpen,
-  Calendar,
   MapPin,
   Star,
   Gamepad2,
@@ -45,12 +43,44 @@ const getPremierColor = (rank) => {
   if (rank < 30000) return "red";
   return "gold";
 };
+const aboutTexts = [
+    {
+        quote: "„Ich fahr nicht gerne Motorrad, weil es cool ist, ich fahr gerne Motorrad, weil ich es gerne fahr. Basta. Abgesehen davon, fahr ich kein Motorrad.“",
+        author: "Rainer Winkler"
+    },
+    {
+        quote: "„Meddler sind wesentlich stärker als billiche, kleine Kaggnadsis.g“",
+        author: "Meddl Lord"
+    },
+    {
+        quote: "„Ich bin ned der Drache ferdammde Aggsd!“",
+        author: "Der Drache"
+    },
+    {
+        quote: "„Ich bin alleine wie das Mammut... aber... es ist völlig irrelevant, denn, ob ihr 5 Menschen seid oder " +
+            "100 oder 1.000 oder 10.000, 100.000 oder Millionen. das Mammut hier steht noch.“",
+        author: "Mammut Lord"
+    },
+    {
+        quote: "„Das is mein Ferd der Blu.“",
+        author: "Rainer"
+    },
+    {
+        quote: "„Blu gehört mir ned, hat mir noch nie gehört. Das war noch nie mein Ferd.“",
+        author: "Rainer"
+    },
+    {
+        quote: "„So jetzt habt ihr richtig Scheiße am Arsch. Die ham jetz hier n Großalarm bei mir ausgerufne, etzala fliegt ihr raus.“",
+        author: "Drachenlord"
+    }
+
+];
 
 
 const projects = [
   {
     title: "Grow Green",
-    desc: "GrowGreen is a 2D gardening game made with Godot, featuring virtual plant care and fun mini-games. ",
+    desc: "GrowGreen is a 2D gardening game made with Godot, featuring virtual plant care and fun mini-games.",
     link: "https://github.com/AlexInABox/grow-green",
   },
   {
@@ -65,18 +95,7 @@ const projects = [
   },
 ];
 
-const blogPosts = [
-  {
-    title: "How I optimize React builds",
-    excerpt: "Small config changes that saved minutes on each CI build.",
-    link: "#",
-  },
-  {
-    title: "From zero to streaming",
-    excerpt: "Setting up OBS, alerts and overlays for clean streams.",
-    link: "#",
-  },
-];
+
 const RENOWN_RANKS = [
   { name: "Bronze", min: 3000, max: 6999, color: "#a16207" },     // brown
   { name: "Silver", min: 7000, max: 10999, color: "#94a3b8" },    // light gray/blue
@@ -97,342 +116,314 @@ const videos = [
     title: "Theo",
     link: "https://theocloud.dev/",
   },
+    {
+        title: "Domi",
+        link: "https://github.com/AuriomTex",
+    }
 ];
 
-const streams = [
-  { day: "Tue", time: "19:00 CEST", title: "Frontend tinkering" },
-  { day: "Fri", time: "20:00 CEST", title: "Project showcase + Q&A" },
-];
-
-/* ---------- Helpers for K/D extraction & formatting ---------- */
-
-function computeKillsDeathsFromProfile(profile) {
-  // 1) direct KD fields (many APIs use several names)
-  const kdCandidates = [
-    profile.kd,
-    profile.kdr,
-    profile.kill_death_ratio,
-    profile.kd_ratio,
-    profile.kdratio,
-    profile.kd_value,
-    profile.stats?.kd,
-    profile.stats?.kdr,
-    profile.stats?.kill_death_ratio,
-  ];
-  for (const v of kdCandidates) {
-    if (v != null && !Number.isNaN(Number(v))) {
-      return { kd: Number(v) };
-    }
-  }
-
-  // 2) direct totals (preferred if present)
-  if (profile.total_kills != null || profile.total_deaths != null) {
-    const kills = Number(profile.total_kills ?? 0);
-    const deaths = Number(profile.total_deaths ?? 0);
-    return { kills, deaths };
-  }
-  if (profile.stats?.total_kills != null || profile.stats?.total_deaths != null) {
-    const kills = Number(profile.stats.total_kills ?? 0);
-    const deaths = Number(profile.stats.total_deaths ?? 0);
-    return { kills, deaths };
-  }
-
-  // 3) sum recent_matches if they include kills/deaths per match
-  if (Array.isArray(profile.recent_matches) && profile.recent_matches.length > 0) {
-    let sumKills = 0;
-    let sumDeaths = 0;
-    let found = false;
-    for (const m of profile.recent_matches) {
-      const k = m.kills ?? m.kd_kills ?? m.player_kills ?? null;
-      const d = m.deaths ?? m.kd_deaths ?? m.player_deaths ?? null;
-      if (k != null && d != null) {
-        found = true;
-        sumKills += Number(k);
-        sumDeaths += Number(d);
-      }
-    }
-    if (found) return { kills: sumKills, deaths: sumDeaths, fromRecentCount: profile.recent_matches.length };
-  }
-
-  // 4) nothing reliable found
-  return null;
-}
-function formatKDObj(obj) {
-  if (!obj) return "—";
-  if (obj.kd != null) {
-    // kd provided directly
-    const v = Number(obj.kd);
-    return Number.isFinite(v) ? v.toFixed(2) : "—";
-  }
-  if (obj.kills != null && obj.deaths != null) {
-    const kills = Number(obj.kills);
-    const deaths = Number(obj.deaths);
-    if (deaths === 0) return kills > 0 ? kills.toFixed(2) : "—";
-    return (kills / deaths).toFixed(2);
-  }
-  return "—";
-}
-function formatKD(kills, deaths) {
-  if (kills == null || deaths == null) return "—";
-  if (deaths === 0) return kills > 0 ? kills.toFixed(2) : "—";
-  return (kills / deaths).toFixed(2);
-}
 
 /* ---------- App ---------- */
 
 function App() {
+    const [aboutText, setAboutText] = useState(null);
+
+    useEffect(() => {
+        const random = aboutTexts[Math.floor(Math.random() * aboutTexts.length)];
+        setAboutText(random);
+    }, []);
   return (
       <div style={styles.page}>
-        <main style={styles.container}>
-          {/* Header / Hero */}
-          <section style={styles.hero}>
-            <div style={styles.heroLeft}>
-              <User
-                  size={56}
-                  style={{
-                    color: ACCENT,
-                    background: "rgba(139,92,246,0.08)",
-                    borderRadius: 10,
-                    padding: 8,
-                  }}
-              />
-              <div style={{ marginLeft: 14 }}>
-                <h1 style={styles.name}>
-                  Josh <span style={{ color: ACCENT }}>lagopodus</span>
-                </h1>
-                <p style={styles.tagline}>Counter Strike • Computer Scienece • Car Stuff</p>
-                <p style={styles.location}>
-                  <MapPin size={14} style={{ marginRight: 8 }} /> Berlin
-                </p>
-              </div>
-            </div>
+          <main style={styles.container}>
+              {/* Header / Hero */}
+              <section style={styles.hero}>
+                  <div style={styles.heroLeft}>
+                      <User
+                          size={56}
+                          style={{
+                              color: ACCENT,
+                              background: "rgba(139,92,246,0.08)",
+                              borderRadius: 10,
+                              padding: 8,
+                          }}
+                      />
+                      <div style={{marginLeft: 14}}>
+                          <h1 style={styles.name}>
+                              Josh <span style={{color: ACCENT}}>lagopodus</span>
+                          </h1>
+                          <p style={styles.tagline}>Counter Strike • Computer Scienece • Car Stuff</p>
+                          <p style={styles.location}>
+                              <MapPin size={14} style={{marginRight: 8}}/> Berlin
+                          </p>
+                      </div>
+                  </div>
+                  <div style={styles.contactsTop}>
+                      <a
+                          style={styles.contactTopBtn}
+                          href="https://github.com/lagopodus"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="GitHub"
+                      >
+                          <Github size={16}/> <span style={{marginLeft: 8}}>GitHub</span>
+                      </a>
 
-            {/* CONTACTS moved to the top (no email) */}
-            <div style={styles.contactsTop}>
-              <a
-                  style={styles.contactTopBtn}
-                  href="https://github.com/lagopodus"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-              >
-                <Github size={16} /> <span style={{ marginLeft: 8 }}>GitHub</span>
-              </a>
+                      <a
+                          style={styles.contactTopBtn}
+                          href="https://www.linkedin.com/in/josh-tischer-80b891349/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="LinkedIn"
+                      >
+                          <Linkedin size={16}/> <span style={{marginLeft: 8}}>LinkedIn</span>
+                      </a>
 
-              <a
-                  style={styles.contactTopBtn}
-                  href="https://www.linkedin.com/in/josh-tischer-80b891349/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-              >
-                <Linkedin size={16} /> <span style={{ marginLeft: 8 }}>LinkedIn</span>
-              </a>
+                      <a
+                          style={styles.contactTopBtn}
+                          href="https://www.youtube.com/@lagopodus_"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="YouTube"
+                      >
+                          <Youtube size={16}/> <span style={{marginLeft: 8}}>YouTube</span>
+                      </a>
 
-              <a
-                  style={styles.contactTopBtn}
-                  href="https://www.youtube.com/@lagopodus_"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="YouTube"
-              >
-                <Youtube size={16} /> <span style={{ marginLeft: 8 }}>YouTube</span>
-              </a>
+                      <a
+                          style={styles.contactTopBtn}
+                          href="https://www.twitch.tv/lagopodus"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Twitch"
+                      >
+                          <Twitch size={16}/> <span style={{marginLeft: 8}}>Twitch</span>
+                      </a>
 
-              <a
-                  style={styles.contactTopBtn}
-                  href="https://www.twitch.tv/lagopodus"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Twitch"
-              >
-                <Twitch size={16} /> <span style={{ marginLeft: 8 }}>Twitch</span>
-              </a>
-
-              <a
-                  style={styles.contactTopBtn}
-                  href="https://twitter.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Twitter"
-              >
-                <Twitter size={16} /> <span style={{ marginLeft: 8 }}>Twitter</span>
-              </a>
-            </div>
-          </section>
-
-          {/* About + CTA */}
-          <section style={styles.card}>
-            <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: 20,
-                  alignItems: "flex-start",
-                  flexWrap: "wrap",
-                }}
-            >
-              <div style={{ flex: 1, minWidth: 280 }}>
-                <h2 style={styles.sectionTitle}>About</h2>
-                <p style={styles.text}>
-                    <i>„Ich fahr nicht gerne Motorrad, weil es cool ist, ich fahr gerne Motorrad, weil ich es gerne fahr.
-                    Basta. Abgesehen davon, fahr ich kein Motorrad.“<br /></i>
-                    <b>- Rainer Winkler</b>
-                </p>
-
-                <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <a
-                      href="https://github.com/lagopodus"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={styles.ctaPrimary}
+                      <a
+                          style={styles.contactTopBtn}
+                          href="https://twitter.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Twitter"
+                      >
+                          <Twitter size={16}/> <span style={{marginLeft: 8}}>Twitter</span>
+                      </a>
+                  </div>
+              </section>
+              <section style={styles.card}>
+                  <div
+                      style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          gap: 20,
+                          alignItems: "flex-start",
+                          flexWrap: "wrap",
+                      }}
                   >
-                    <Github size={14} /> <span style={{ marginLeft: 8 }}>View GitHub</span>
-                  </a>
-                </div>
-              </div>
-
-              <div style={{ width: 320, minWidth: 260 }}>
-                <h3 style={{ ...styles.sectionTitle, marginBottom: 10 }}>Quick stats</h3>
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <Stat title="Hours played" value="2000+" icon={<Clock size={16} />} />
-                  <Stat title="Inventory worth" value="~3000$" icon={<CircleDollarSign size={16} />} />
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Projects */}
-          <section style={styles.card}>
-            <h2 style={styles.sectionTitle}>Featured projects</h2>
-            <div style={styles.projectsGrid}>
-              {projects.map((p) => (
-                  <a key={p.title} href={p.link} target="_blank" rel="noopener noreferrer" style={styles.projectCard}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <Code size={18} style={{ color: ACCENT }} />
-                      <div>
-                        <div style={{ color: TEXT, fontWeight: 700 }}>{p.title}</div>
-                        <div style={{ color: MUTED, fontSize: 13 }}>{p.desc}</div>
+                      <div style={{flex: 1, minWidth: 280}}>
+                          <h2 style={styles.sectionTitle}>About</h2>
+                          {aboutText && (
+                              <p style={styles.text}>
+                                  <i>{aboutText.quote}<br/></i>
+                                  <b>- {aboutText.author}</b>
+                              </p>
+                          )}
                       </div>
-                    </div>
-                    <ExternalLink size={14} style={{ color: MUTED }} />
-                  </a>
-              ))}
-            </div>
-          </section>
 
-          {/* Gaming & Stats section - Leetify card moved here as a normal tile */}
-          <section style={styles.card}>
-            <h2 style={styles.sectionTitle}>Gaming & stats</h2>
-            <div style={styles.projectsGrid}>
-              {/* Leetify tile */}
-              <LeetifyCard />
-              {/* You can add more tiles here (Faceit / Twitch embed / streams preview) */}
-            </div>
-          </section>
 
-          {/* Videos + Streams */}
-          <section style={styles.gridTwo}>
-            <div style={styles.card}>
-              <h2 style={styles.sectionTitle}>Freunde</h2>
-              <div style={{ display: "grid", gap: 10 }}>
-                {videos.map((v) => (
-                    <a key={v.title} href={v.link} target="_blank" rel="noopener noreferrer" style={styles.videoRow}>
-                      <CircleUserRound size={18} style={{ color: ACCENT }} />
-                      <div style={{ marginLeft: 10 }}>
-                        <div style={{ color: TEXT, fontWeight: 600 }}>{v.title}</div>
-                        <div style={{ color: MUTED, fontSize: 13 }}>Click!!</div>
+                      <div style={{width: 320, minWidth: 260}}>
+                          <h3 style={{...styles.sectionTitle, marginBottom: 10}}>Quick stats</h3>
+                          <div style={{display: "flex", gap: 10, flexWrap: "wrap"}}>
+                              <Stat title="Hours played" value="2000+" icon={<Clock size={16}/>}/>
+                              <Stat title="Inventory worth" value="~3000$" icon={<CircleDollarSign size={16}/>}/>
+                          </div>
                       </div>
-                    </a>
-                ))}
-              </div>
-              <a
-                  href="https://www.youtube.com/@lagopodus_"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ ...styles.linkInline, marginTop: 12 }}
-              >
-                <ExternalLink size={14} /> <span style={{ marginLeft: 8 }}>Visit YouTube channel</span>
-              </a>
-            </div>
-
-            <div style={styles.card}>
-              <h2 style={styles.sectionTitle}>Upcoming streams</h2>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {streams.map((s) => (
-                    <div key={s.day} style={styles.streamRow}>
-                      <div style={{ fontWeight: 700 }}>{s.day}</div>
-                      <div style={{ color: MUTED }}>{s.time}</div>
-                      <div style={{ marginLeft: "auto", color: TEXT }}>{s.title}</div>
-                    </div>
-                ))}
-              </div>
-
-              <a href="https://www.twitch.tv/" target="_blank" rel="noopener noreferrer" style={{ ...styles.linkInline, marginTop: 12 }}>
-                <Twitch size={14} /> <span style={{ marginLeft: 8 }}>Follow on Twitch</span>
-              </a>
-            </div>
-          </section>
-
-          {/* Blog + Experience */}
-          <section style={styles.card}>
-            <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
-              <div style={{ flex: 1, minWidth: 260 }}>
-                <h2 style={styles.sectionTitle}>Latest blog</h2>
-                {blogPosts.map((b) => (
-                    <a key={b.title} href={b.link} style={styles.blogRow}>
-                      <BookOpen size={18} style={{ color: ACCENT }} />
-                      <div style={{ marginLeft: 10 }}>
-                        <div style={{ color: TEXT, fontWeight: 700 }}>{b.title}</div>
-                        <div style={{ color: MUTED, fontSize: 13 }}>{b.excerpt}</div>
+                  </div>
+              </section>
+              <section style={styles.card}>
+                  <h2 style={styles.sectionTitle}>My Projects</h2>
+                  <div style={styles.projectsGrid}>
+                      {projects.map((p) => (
+                          <a key={p.title} href={p.link} target="_blank" rel="noopener noreferrer"
+                             style={styles.projectCard}>
+                              <div style={{display: "flex", alignItems: "center", gap: 12}}>
+                                  <Code size={18} style={{color: ACCENT}}/>
+                                  <div>
+                                      <div style={{color: TEXT, fontWeight: 700}}>{p.title}</div>
+                                      <div style={{color: MUTED, fontSize: 13}}>{p.desc}</div>
+                                  </div>
+                              </div>
+                              <ExternalLink size={14} style={{color: MUTED}}/>
+                          </a>
+                      ))}
+                      <div style={{marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap"}}>
+                          <a
+                              href="https://github.com/lagopodus"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={styles.ctaPrimary}
+                          >
+                              <Github size={14}/> <span style={{marginLeft: 8}}>View GitHub</span>
+                          </a>
                       </div>
-                    </a>
-                ))}
-              </div>
+                  </div>
+              </section>
+              <section style={styles.card}>
+                  <h2 style={styles.sectionTitle}>Gaming Stats</h2>
+                  <div style={styles.projectsGrid}>
+                      <LeetifyCard/>
+                  </div>
+              </section>
+              <section style={styles.gridTwo}>
+                  <div style={styles.card}>
+                      <h2 style={styles.sectionTitle}>Friends</h2>
+                      <div style={{display: "grid", gap: 10}}>
+                          {videos.map((v) => (
+                              <a key={v.title} href={v.link} target="_blank" rel="noopener noreferrer"
+                                 style={styles.videoRow}>
+                                  <CircleUserRound size={18} style={{color: ACCENT}}/>
+                                  <div style={{marginLeft: 10}}>
+                                      <div style={{color: TEXT, fontWeight: 600}}>{v.title}</div>
+                                      <div style={{color: MUTED, fontSize: 13}}>Click!!</div>
+                                  </div>
+                              </a>
+                          ))}
+                      </div>
+                  </div>
 
-              <div style={{ width: 360, minWidth: 260 }}>
-                <h2 style={styles.sectionTitle}>Experience</h2>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  <Experience role="Frontend Engineer" place="Startup A" period="2023 — Present" desc="Working on product UI, performance and dev tooling." />
-                  <Experience role="Web Developer" place="Freelance" period="2020 — 2023" desc="Built sites & small apps for clients." />
-                </div>
-              </div>
-            </div>
-          </section>
+                  <LatestYouTube/>
+              </section>
+
+              <section style={styles.card}>
+                  <div style={{display: "flex", gap: 18, flexWrap: "wrap"}}>
+                      <div style={{flex: 1, minWidth: 260}}>
+                          <h2 style={styles.sectionTitle}>Favourite Games</h2>
+                          <div style={{display: "flex", gap: 8, flexWrap: "wrap"}}>
+                              {[
+                                  {
+                                      name: "Counter Strike 2",
+                                      url: "https://store.steampowered.com/app/730/CounterStrike_Global_Offensive/"
+                                  },
+                                  {
+                                      name: "Elden Ring",
+                                      surl: "https://store.steampowered.com/app/1245620/ELDEN_RING/"},
+                                  {
+                                      name: "Dark Souls",
+                                      url: "https://store.steampowered.com/app/570940/DARK_SOULS_REMASTERED/"
+                                  },
+                                  {
+                                      name: "Hollow Knight",
+                                      url: "https://store.steampowered.com/app/367520/Hollow_Knight/"
+                                  },
+                                  {
+                                      name: "Hearthstone",
+                                      url: "https://hearthstone.blizzard.com/"
+                                  },
+                                  {
+                                      name: "The Witcher III",
+                                      url: "https://store.steampowered.com/app/292030/The_Witcher_3_Wild_Hunt/"
+                                  },
+                                  {
+                                      name: "Remnant: From the Ashes",
+                                      url: "https://store.steampowered.com/app/617290/Remnant_From_the_Ashes/"
+                                  },
+                              ].map((game) => (
+                                  <a
+                                      key={game.name}
+                                      href={game.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      style={{...styles.skillPill, textDecoration: "none", display: "inline-block"}}
+                                  >
+                                      {game.name}
+                                  </a>
+                              ))}
+                          </div>
+                      </div>
+                  </div>
+              </section>
 
 
-
-
-
-          {/* Skills */}
-          <section style={styles.card}>
-            <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
-              <div style={{ flex: 1, minWidth: 260 }}>
-                <h2 style={styles.sectionTitle}>Skills</h2>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  {["React", "TypeScript", "Vite", "Node.js", "CSS", "Testing"].map((s) => (
-                      <span key={s} style={styles.skillPill}>{s}</span>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ width: 320, minWidth: 240 }}>
-                <h2 style={styles.sectionTitle}>Get in touch</h2>
-                <p style={{ color: MUTED }}>All contact links are now available at the top of the page for quick access.</p>
-              </div>
-            </div>
-          </section>
-
-          <footer style={styles.footer}>
-            <div>Built with React • Purple vibes ✨</div>
-            <div style={{ color: MUTED, fontSize: 13 }}>© {new Date().getFullYear()} Josh</div>
-          </footer>
-        </main>
+              <footer style={styles.footer}>
+                  <div>Built with React</div>
+                  <div style={{color: MUTED, fontSize: 13}}>© {new Date().getFullYear()} Josh</div>
+              </footer>
+          </main>
       </div>
   );
 }
 
 /* small subcomponents */
+function LatestYouTube() {
+    const [videos, setVideos] = React.useState([]);
+
+    useEffect(() => {
+        async function fetchVideos() {
+            try {
+                const res = await fetch(
+                    "https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=UCwXnuUrX5WpWTWJhgoRRJcQ"
+                );
+                const data = await res.json();
+                console.log("YouTube RSS feed:", data); // 👈 debug
+                setVideos(data.items.slice(0, 2)); // take latest 5
+            } catch (err) {
+                console.error("Failed to fetch YouTube feed", err);
+            }
+        }
+
+        fetchVideos();
+    }, []);
+
+    return (
+        <div style={styles.card}>
+            <h2 style={styles.sectionTitle}>Latest YouTube videos</h2>
+            <div style={{display: "flex", flexDirection: "column", gap: 12}}>
+                {videos.map((v) => (
+                    <a
+                        key={v.guid}
+                        href={v.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 10,
+                            textDecoration: "none",
+                        }}
+                    >
+                        <img
+                            src={v.thumbnail}
+                            alt={v.title}
+                            style={{
+                                width: 120,
+                                height: 70,
+                                borderRadius: 8,
+                                objectFit: "cover",
+                            }}
+                        />
+                        <div>
+                            <div style={{ color: TEXT, fontWeight: 700, fontSize: 14 }}>
+                                {v.title}
+                            </div>
+                            <div style={{ color: MUTED, fontSize: 12 }}>
+                                {new Date(v.pubDate).toLocaleDateString()}
+                            </div>
+                        </div>
+                    </a>
+                ))}
+            </div>
+            <a
+                href="https://www.youtube.com/@lagopodus_"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ ...styles.linkInline, marginTop: 12 }}
+            >
+                <Youtube size={14} />{" "}
+                <span style={{ marginLeft: 8 }}>Visit YouTube channel</span>
+            </a>
+        </div>
+    );
+}
+
 function Stat({ title, value, icon }) {
   return (
       <div style={{ padding: 12, borderRadius: 10, background: CARD_ALT, minWidth: 120 }}>
@@ -492,26 +483,14 @@ function LeetifyCard() {
   // core values
   const winPct = typeof profile.winrate === "number" ? (profile.winrate * 100).toFixed(1) : "—";
   const leetRating = profile.ranks?.leetify ?? "—";
-  const faceit = profile.ranks?.faceit ?? "—";
   const renown = profile.ranks?.renown ?? null;
   const recentMatches = Array.isArray(profile.recent_matches) ? profile.recent_matches : [];
   const recent = recentMatches.length ? recentMatches[0] : null;
 
-  // K/D
-  const kdData = computeKillsDeathsFromProfile(profile);
-  const kdLabel = kdData ? formatKD(kdData.kills, kdData.deaths) : null;
-  const kdNum = kdLabel && kdLabel !== "—" ? Number(kdLabel) : null;
-  const kdColor = kdNum == null ? "#8b5cf6" : kdNum >= 1.15 ? "#16a34a" : kdNum >= 0.95 ? "#f59e0b" : "#ef4444";
 
   // renown rank
   const renownRank = getRenownRank(renown);
   const renownProgress = renown != null && renownRank ? renownProgressInTier(renown) : 0;
-
-  // sparkline data (take leetify_rating from recent matches if available)
-  const sparkData = recentMatches
-      .map((m) => (m.leetify_rating != null ? Number(m.leetify_rating) : null))
-      .filter((v) => v != null)
-      .slice(-12);
 
   return (
       <article
@@ -652,8 +631,7 @@ function LeetifyCard() {
               <div style={{ color: MUTED, fontSize: 13 }}>matches</div>
             </div>
 
-            {/* Leetify rating */}
-            {/* Leetify rating */}
+
             {(() => {
               let ratingColor = TEXT; // default
               if (leetRating <= -1.5) {
@@ -927,15 +905,14 @@ function LeetifyCard() {
                 paddingTop: 10,
               }}
           >
-            Data updated from Leetify ·{" "}
+            Data updated from {" "}
             <a
                 href="https://leetify.com"
                 target="_blank"
                 rel="noreferrer"
                 style={{color: ACCENT}}
             >
-              View on Leetify
-            </a>
+                Leetify            </a>
           </div>
         </div>
       </article>
@@ -944,51 +921,6 @@ function LeetifyCard() {
 
 }
 
-/* Sparkline component (small inline SVG) */
-function Sparkline({data = [], color = ACCENT, width = 200, height = 44}) {
-  if (!data || !data.length) return (
-      <div style={{width, height, background: "rgba(255,255,255,0.02)", borderRadius: 8}}/>
-  );
-
-  const padding = 6;
-  const plotW = width - padding * 2;
-  const plotH = height - padding * 2;
-  const min = Math.min(...data);
-  const max = Math.max(...data);
-  const range = max - min || 1;
-  const step = data.length > 1 ? plotW / (data.length - 1) : 0;
-
-  const points = data.map((v, i) => {
-    const x = padding + i * step;
-    const y = padding + (plotH - ((v - min) / range) * plotH);
-    return {x, y, v};
-  });
-
-  const pointsStr = points.map((p) => `${p.x},${p.y}`).join(" ");
-  const areaPoints = `${padding + 0},${padding + plotH} ${pointsStr} ${padding + plotW},${padding + plotH}`;
-
-  return (
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} xmlns="http://www.w3.org/2000/svg"
-           preserveAspectRatio="none">
-        {/* dark block behind the sparkline (subtle) */}
-        <rect x="0" y="0" width={width} height={height} rx="8" ry="8" fill="rgba(0,0,0,0.18)"/>
-
-        {/* subtle area fill */}
-        <polygon points={areaPoints} fill={`${color}18`}/>
-
-        {/* line */}
-        <polyline points={pointsStr} fill="none" stroke={color} strokeWidth="2.4" strokeLinecap="round"
-                  strokeLinejoin="round"/>
-
-        {/* small dots */}
-        {points.map((p, i) => (
-            <circle key={i} cx={p.x} cy={p.y} r={2.4} fill={color}/>
-        ))}
-      </svg>
-  );
-}
-
-/* helper UI pieces used in Leetify tile */
 function getRenownRank(renown) {
   if (renown == null || isNaN(Number(renown))) return null;
   const n = Number(renown);
@@ -996,7 +928,6 @@ function getRenownRank(renown) {
 }
 
 function renownProgressInTier(renown) {
-  // returns 0..1 progress inside current tier (for infinite top tier => 1)
   const rank = getRenownRank(renown);
   if (!rank) return 0;
   if (!isFinite(rank.max)) return 1;
@@ -1006,55 +937,6 @@ function renownProgressInTier(renown) {
   return Math.max(0, Math.min(1, progress));
 }
 
-function Badge({ icon, label, style }) {
-  return (
-      <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "6px 10px",
-            borderRadius: 999,
-            background: "rgba(139,92,246,0.06)",
-            border: "1px solid transparent",
-            ...style,
-          }}
-      >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>{icon}</div>
-        <div style={{ color: TEXT, fontWeight: 700, fontSize: 13 }}>{label}</div>
-      </div>
-  );
-}
-
-function MiniStat({ label, value }) {
-  return (
-      <div style={{ background: CARD_ALT, padding: 10, borderRadius: 10, minWidth: 110 }}>
-        <div style={{ color: MUTED, fontSize: 12 }}>{label}</div>
-        <div style={{ color: TEXT, fontWeight: 800, marginTop: 6 }}>{value}</div>
-      </div>
-  );
-}
-
-function formatNumber(n) {
-  if (n == null || n === undefined) return "—";
-  if (typeof n === "number") return Number.isInteger(n) ? n : n.toFixed(1);
-  return n;
-}
-
-function Experience({ role, place, period, desc }) {
-  return (
-      <div style={{ padding: 12, borderRadius: 10, background: CARD_ALT }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
-          <div>
-            <div style={{ color: TEXT, fontWeight: 700 }}>{role}</div>
-            <div style={{ color: MUTED, fontSize: 13 }}>{place}</div>
-          </div>
-          <div style={{ color: MUTED, fontSize: 13 }}>{period}</div>
-        </div>
-        <div style={{ marginTop: 8, color: MUTED, fontSize: 13 }}>{desc}</div>
-      </div>
-  );
-}
 
 /* styles (unchanged except projectsGrid min width) */
 const styles = {
