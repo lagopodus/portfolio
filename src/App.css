@@ -1,38 +1,514 @@
-.App {
-  text-align: center;
+
+:root {
+  --accent: #8b5cf6;
+  --bg: #071029;
+  --card: #071827;
+  --card-alt: #0b1a2b;
+  --muted: #9aa6bf;
+  --text: #e6eef8;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+.page {
+  background: linear-gradient(-45deg, #071029, #0b1a2b, #071029, #0b1a2b);
+  background-size: 400% 400%;
+  animation: gradient 20s ease infinite;
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
   min-height: 100vh;
+  padding: 28px;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto;
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+@keyframes gradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.name {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.tagline {
+  margin: 6px 0;
+  color: var(--muted);
+}
+
+.location {
+  margin: 0;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.contacts-top {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  overflow-x: auto;
+}
+
+.contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.02);
+  font-weight: 700;
+  font-size: 12px;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.contact-btn:hover {
+  background: rgba(139, 92, 246, 0.3); /* bland purple */
+}
+
+
+.card {
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(7, 24, 39, 0.8);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+}
+.card:hover {
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.12);
+  transform: translateY(-2px);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: transparent url("https://www.transparenttextures.com/patterns/stardust.png");
+  animation: drift 120s linear infinite;
+  opacity: 0.20;
+}
+
+@keyframes drift {
+  from { background-position: 0 0; }
+  to   { background-position: -5000px 5000px; }
+}
+
+.section-title {
+  margin: 0 0 12px 0;
+  color: var(--text);
+  font-size: 18px;
+}
+
+.text {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--accent);
+  color: white;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.cta-primary:hover {
+  background: rgba(139, 92, 246, 0.7); /* bland purple */
+  transform: scale(1.05);
+}
+
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+}
+.project-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* text on top, progress on bottom */
+  flex: 1;
+}
+
+.project-progress {
+  margin-top: auto; /* pushes progress down */
+}
+
+
+.project-card {
+  display: grid;
+  grid-template-columns: 1fr auto; /* info | link */
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--card-alt);
+  text-decoration: none;
+  color: var(--text);
+  min-height: 140px;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.project-card:hover {
+  background: linear-gradient(
+          145deg,
+          rgba(11, 26, 43, 0.95),
+          rgba(139, 92, 246, 0.15)
+  );
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}
+
+.project-info {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.project-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* pushes progress bar down */
+  flex: 1;
+}
+
+.progress-bar {
+  margin-top: 8px;
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #60a5fa);
+  border-radius: 999px;
+}
+
+.progress-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 2px;
+  text-align: right;
+}
+
+.achievement-popup {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 14px 18px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: slideIn 0.4s ease, fadeOut 0.4s ease 3s forwards;
+  z-index: 1000;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  to { transform: translateX(120%); opacity: 0; }
+}
+
+
+.achievement-popup .achievement-icon {
+  font-size: 24px;
+}
+
+
+
+.grid-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.video-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--card-alt);
+  text-decoration: none;
+  color: var(--text);
+  transition: background 0.2s ease;
+}
+
+
+.video-row:hover {
+  background: linear-gradient(
+          145deg,
+          rgba(11, 26, 43, 0.95),
+          rgba(139, 92, 246, 0.15)
+  );
+  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.12);
+}
+
+.youtube-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 6px;
+  transition: background 0.2s ease;
+}
+
+.youtube-row:hover {
+  background: linear-gradient(
+          145deg,
+          rgba(11, 26, 43, 0.95),
+          rgba(139, 92, 246, 0.15)
+  );
+  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.12);
+}
+
+.link-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.skill-pill {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(139,92,246,0.06);
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 13px;
+  display: inline-block;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.skill-pill:hover {
+  background: rgba(139, 92, 246, 0.3); /* bland purple */
+  transform: scale(1.05);
+}
+.setup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.setup-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--card-alt);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.setup-item:hover {
+  background: linear-gradient(
+          145deg,
+          rgba(11, 26, 43, 0.95),
+          rgba(139, 92, 246, 0.15)
+  );
+  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.12);
+}
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.achievement-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--card-alt);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.achievement-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.achievement-locked {
+  opacity: 0.4;
+  filter: grayscale(100%);
+}
+.achievement-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 6px;
+  color: var(--text);
+}
+.achievement-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+
+/* 🔓 Unlocked look */
+.achievement.unlocked {
+  background: var(--card-alt);
+  color: var(--text);
+}
+
+.achievement.unlocked:hover {
+  background: linear-gradient(
+          145deg,
+          rgba(11, 26, 43, 0.95),
+          rgba(139, 92, 246, 0.15)
+  );
+  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.12);
+}
+
+/* 🔒 Locked look */
+.achievement.locked {
+  background: rgba(255, 255, 255, 0.05);
+  filter: grayscale(100%) brightness(0.6);
+  color: #666;
+}
+
+
+.achievements-complete {
+  position: relative;
+  border-radius: 16px;
+  animation: glow-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.8); /* initial glow */
+}
+
+@keyframes glow-pulse {
+  0% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.6),
+    0 0 40px rgba(139, 92, 246, 0.4);
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 1),
+    0 0 60px rgba(139, 92, 246, 0.8);
   }
+  100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.6),
+    0 0 40px rgba(139, 92, 246, 0.4);
+  }
+}
+
+.setup-title {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.setup-text {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+
+.gradient-text {
+  background: linear-gradient(
+          90deg,
+          #f5f5f5,   /* almost white */
+          #d8b4fe,   /* light lavender */
+          #a5b4fc,   /* soft periwinkle */
+          #fbcfe8,   /* pale pink */
+          #f5f5f5
+  );
+  background-size: 300% 100%;
+  background-position: 0% center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+
+  /* ⭐ make it shimmer */
+  animation: shine 10s linear infinite;
+  display: inline-block;            /* helps with background animation on text */
+  will-change: background-position; /* smoother */
+}
+
+@keyframes shine {
+  0%   { background-position:   0% center; }
+  100% { background-position: 200% center; }
+}
+
+.spotlight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(
+          circle 300px at var(--x, 50%) var(--y, 50%),
+          rgba(139, 92, 246, 0.06),   /* faint accent purple */
+          transparent 80%
+  );
+  transition: background 0.1s linear;
+  z-index: 0;
+}
+
+.footer {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
 }
