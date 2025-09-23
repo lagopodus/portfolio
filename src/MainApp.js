@@ -542,7 +542,7 @@ function MainApp() {
 
                         {/* GPU */}
                         <a
-                            href="https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-ti/"
+                            href="https://marketplace.nvidia.com/de-de/consumer/graphics-cards/?locale=de-de&page=1&limit=12&gpu=RTX%204070%20Ti%20SUPER&gpu_filter=RTX%205090~27,RTX%205080~34,RTX%205070%20Ti~29,RTX%205070~43,RTX%205060%20Ti~53,RTX%205060~32,RTX%204070%20Ti%20SUPER~9,RTX%205050~15,RTX%204090~2,RTX%204080%20SUPER~3,RTX%204070%20Ti~8,RTX%204070%20SUPER~13,RTX%204070~10,RTX%204060%20Ti~14,RTX%204060~14,RTX%203050~18"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="setup-item"
