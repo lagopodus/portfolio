@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAchievements } from "./AchievementContext";
-
+import NowPlaying from "./NowPlaying";
 import {
     Github,
     User,
@@ -26,9 +26,11 @@ import {
     Mouse,
     Headphones,
     Lock,
-    BookHeart
+    BookHeart,
+    BadgeQuestionMark
 } from "lucide-react";
 import "./App.css";
+import BurgerMenu from "./BurgerMenu";
 import { motion, useMotionValue, useTransform, animate, AnimatePresence  } from "framer-motion";
 
 
@@ -68,7 +70,7 @@ const projects = [
         title: "Portfolio",
         desc: "The page you are viewing right now.",
         link: "https://github.com/lagopodus/portfolio",
-        progress: 70,
+        progress: 80,
     },
     {
         title: "Unreal Engine FPS Game",
@@ -169,6 +171,13 @@ export const ACHIEVEMENTS = [
         desc: "Stayed idle on the site for 2+ minutes",
         icon: "clock",
         unlocked: false
+    },
+    {
+        id: "secret",
+        title: "Secret",
+        desc: "???",
+        icon: "question",
+        unlocked: false
     }
 ];
 const ICONS = {
@@ -181,15 +190,59 @@ const ICONS = {
     locked: <Lock size={20} style={{ color: "gray" }} />,        // locked = gray
     star: <Star size={20} style={{ color: "#facc15" }} />,   // yellow/golden star
     clock: <Clock size={20} style={{ color: "#60a5fa" }} />, // blue clock
+    question: <BadgeQuestionMark size={20} style={{ color: "#fff" }} />, // blue clock
 
 };
+
 
 
 function MainApp() {
     const [aboutText, setAboutText] = useState(null);
     const { achievements, unlock, lastUnlocked, setLastUnlocked } = useAchievements();
     const allUnlocked = achievements.every((a) => a.unlocked);
+    const [keys, setKeys] = useState([]);
+    const [theme, setTheme] = useState("dark");
 
+    useEffect(() => {
+        document.documentElement.setAttribute("data-theme", theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme((t) => (t === "dark" ? "light" : "dark"));
+    };
+
+
+    const unlockRef = useRef(unlock);
+    useEffect(() => { unlockRef.current = unlock; }, [unlock]);
+
+    useEffect(() => {
+        const seq = [
+            "ArrowUp", "ArrowUp",
+            "ArrowDown", "ArrowDown",
+            "ArrowLeft", "ArrowRight",
+            "ArrowLeft", "ArrowRight",
+            "b", "a"
+        ];
+        let index = 0;
+
+        const onKeyDown = (e) => {
+            const key = e.key.length === 1 ? e.key.toLowerCase() : e.key; // normalize
+            if (key === seq[index]) {
+                index += 1;
+                if (index === seq.length) {
+                    // unlock once
+                    unlockRef.current("secret");
+                    index = 0;
+                }
+            } else {
+                // smart reset: if current key equals first key, start from 1, else 0
+                index = key === seq[0] ? 1 : 0;
+            }
+        };
+
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, []); // runs once
 
     useEffect(() => {
         let timer;
@@ -256,6 +309,8 @@ function MainApp() {
         <div className="page">
             <div className="particles"></div>
             <div className="spotlight"></div>
+            <BurgerMenu toggleTheme={toggleTheme} theme={theme} />
+
 
             <main className="container">
                 <section className="hero">
@@ -312,7 +367,7 @@ function MainApp() {
                 />
 
                 {/* About */}
-                <MotionCard className="card">
+                <MotionCard id="about" className="card">
                     <div style={{
                         display: "flex",
                         justifyContent: "space-between",
@@ -339,8 +394,18 @@ function MainApp() {
                     </div>
                 </MotionCard>
 
+                <MotionCard id="music" className="card">
+                    <h2 className="section-title gradient-text">Music</h2>
+
+                        <NowPlaying
+                            username="lagopodus"
+                            apiKey="64c8ea82a1994cddc375f2f7550e31c8"
+                        />
+
+                </MotionCard>
+
                 {/* Projects */}
-                <MotionCard className="card">
+                <MotionCard id="projects" className="card">
                     <h2 className="section-title gradient-text">My Projects</h2>
                     <div className="projects-grid">
                         {projects.map((p) => (
@@ -351,7 +416,7 @@ function MainApp() {
                                 rel="noopener noreferrer"
                                 className="project-card"
                             >
-                                <div className="project-info">
+                            <div className="project-info">
                                     <Code size={18} style={{color: "var(--accent)"}}/>
                                     <div className="project-body">
                                         <div className="project-text">
@@ -384,7 +449,7 @@ function MainApp() {
 
 
                 {/* Leetify Stats */}
-                <MotionCard className="card">
+                <MotionCard id="stats" className="card">
                     <h2 className="section-title gradient-text">Gaming Stats</h2>
                     <div className="projects-grid">
                         <LeetifyCard/>
@@ -393,7 +458,7 @@ function MainApp() {
 
                 {/* Friends + YouTube */}
                 <section className="grid-two">
-                    <MotionCard className="card">
+                    <MotionCard id="friends" className="card">
                         <h2 className="section-title gradient-text">Friends</h2>
                         <div style={{display: "grid", gap: 10}}>
                             {videos.map((v) => (
@@ -418,7 +483,7 @@ function MainApp() {
                     <LatestYouTube/>
                 </section>
 
-                <MotionCard className="card">
+                <MotionCard id="setup" className="card">
                     <h2 className="section-title gradient-text">My Setup</h2>
                     <div className="setup-grid">
                         {/* Monitors */}
@@ -534,7 +599,7 @@ function MainApp() {
                 </MotionCard>
 
 
-                <MotionCard className={`card ${allUnlocked ? "achievements-complete" : ""}`}>
+                <MotionCard id="achievements" className={`card ${allUnlocked ? "achievements-complete" : ""}`}>
                     <h2 className="section-title gradient-text">Website Achievements</h2>
                     <div className="achievements-grid">
                         {achievements.map((a) => (
@@ -552,8 +617,10 @@ function MainApp() {
 
 
 
+
+
                 {/* Favourite Games */}
-                <MotionCard className="card">
+                <MotionCard id="games" className="card">
                     <h2 className="section-title gradient-text">Favourite Games</h2>
                     <div style={{display: "flex", gap: 8, flexWrap: "wrap"}}>
                         {[
@@ -705,7 +772,7 @@ function LatestYouTube() {
     }, []);
 
     return (
-        <MotionCard className="card">
+        <MotionCard id = "youtube" className="card">
             <h2 className="section-title gradient-text">Latest YouTube videos</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {videos.map((v) => (
@@ -858,27 +925,22 @@ function LeetifyCard() {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        background:
-                            "linear-gradient(180deg, rgba(139,92,246,0.14), rgba(139,92,246,0.04))",
+                        background: "linear-gradient(180deg, rgba(139,92,246,0.14), rgba(139,92,246,0.04))",
                         border: "1px solid rgba(255,255,255,0.02)",
                     }}
                 >
-                    {profile.avatar ? (
-                        <img
-                            src={profile.avatar}
-                            alt={profile.name}
-                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        />
-                    ) : (
-                        <Gamepad2 size={44} style={{ color: "var(--accent)" }} />
-                    )}
+                    <img
+                        src="/gomme.jpg"
+                        alt="leetify"
+                        style={{width: "100%", height: "100%", objectFit: "cover"}}
+                    />
                 </div>
 
-                <div style={{ textAlign: "center" }}>
-                    <div style={{ color: "var(--text)", fontWeight: 900, fontSize: 18 }}>
+                <div style={{textAlign: "center"}}>
+                    <div style={{color: "var(--text)", fontWeight: 900, fontSize: 18}}>
                         {profile.name}
                     </div>
-                    <div style={{ color: "var(--muted)", fontSize: 13, marginTop: 4 }}>
+                    <div style={{color: "var(--muted)", fontSize: 13, marginTop: 4}}>
                         Leetify profile
                     </div>
                 </div>
@@ -890,7 +952,8 @@ function LeetifyCard() {
                     target="_blank"
                     rel="noreferrer"
                     onMouseDown={(e) => handleUnlockClick(e, "visit-leetify", unlock)}
-                    onClick={(e) => handleUnlockClick(e, "visit-leetify", unlock)}                    style={{
+                    onClick={(e) => handleUnlockClick(e, "visit-leetify", unlock)}
+                    style={{
                         marginTop: 8,
                         display: "inline-flex",
                         alignItems: "center",
@@ -904,9 +967,10 @@ function LeetifyCard() {
                         fontSize: 13,
                     }}
                 >
-                    <ExternalLink size={14} /> View
+                    <ExternalLink size={14}/> View
                 </a>
             </div>
+
 
             {/* Middle: stats */}
             <div
@@ -946,10 +1010,10 @@ function LeetifyCard() {
                     >
                         <Trophy
                             size={18}
-                            style={{ color: winPct > 50 ? "#22c55e" : "#ef4444" }}
+                            style={{color: winPct > 50 ? "#22c55e" : "#ef4444"}}
                         />
                         <div>{winPct}%</div>
-                        <div style={{ fontSize: 13, color: "var(--muted)" }}>winrate</div>
+                        <div style={{fontSize: 13, color: "var(--muted)"}}>winrate</div>
                     </div>
 
                     {/* Matches pill */}
@@ -963,11 +1027,11 @@ function LeetifyCard() {
                             borderRadius: 12,
                         }}
                     >
-                        <Zap size={18} style={{ color: "var(--accent)" }} />
-                        <div style={{ fontWeight: 900, color: "var(--text)" }}>
+                        <Zap size={18} style={{color: "var(--accent)"}}/>
+                        <div style={{fontWeight: 900, color: "var(--text)"}}>
                             {profile.total_matches ?? "—"}
                         </div>
-                        <div style={{ color: "var(--muted)", fontSize: 13 }}>matches</div>
+                        <div style={{color: "var(--muted)", fontSize: 13}}>matches</div>
                     </div>
 
                     {/* Leetify rating pill */}
@@ -990,15 +1054,15 @@ function LeetifyCard() {
                                     borderRadius: 12,
                                 }}
                             >
-                                <Star size={18} style={{ color: "#60a5fa" }} />
-                                <div style={{ fontWeight: 900, color: ratingColor }}>
+                                <Star size={18} style={{color: "#60a5fa"}}/>
+                                <div style={{fontWeight: 900, color: ratingColor}}>
                                     {typeof leetRating === "number"
                                         ? leetRating > 0
                                             ? `+${leetRating.toFixed(2)}`
                                             : leetRating.toFixed(2)
                                         : leetRating}
                                 </div>
-                                <div style={{ color: "var(--muted)", fontSize: 13 }}>
+                                <div style={{color: "var(--muted)", fontSize: 13}}>
                                     leetify
                                 </div>
                             </div>
@@ -1017,11 +1081,11 @@ function LeetifyCard() {
                                 borderRadius: 12,
                             }}
                         >
-                            <Crosshair size={18} style={{ color: "#f87171" }} />
-                            <div style={{ fontWeight: 900, color: "var(--text)" }}>
+                            <Crosshair size={18} style={{color: "#f87171"}}/>
+                            <div style={{fontWeight: 900, color: "var(--text)"}}>
                                 {profile.rating.aim.toFixed(1)}
                             </div>
-                            <div style={{ color: "var(--muted)", fontSize: 13 }}>aim</div>
+                            <div style={{color: "var(--muted)", fontSize: 13}}>aim</div>
                         </div>
                     )}
 
@@ -1037,11 +1101,11 @@ function LeetifyCard() {
                                 borderRadius: 12,
                             }}
                         >
-                            <Crosshair size={18} style={{ color: "#f87171" }} />
-                            <div style={{ fontWeight: 900, color: "var(--text)" }}>
+                            <Crosshair size={18} style={{color: "#f87171"}}/>
+                            <div style={{fontWeight: 900, color: "var(--text)"}}>
                                 {profile.rating.positioning.toFixed(1)}
                             </div>
-                            <div style={{ color: "var(--muted)", fontSize: 13 }}>
+                            <div style={{color: "var(--muted)", fontSize: 13}}>
                                 positioning
                             </div>
                         </div>
@@ -1061,8 +1125,8 @@ function LeetifyCard() {
                     }}
                 >
                     {/* Renown */}
-                    <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    <div style={{display: "flex", gap: 12, alignItems: "center"}}>
+                        <div style={{display: "flex", flexDirection: "column", gap: 10}}>
                             <div
                                 style={{
                                     fontSize: 18,
@@ -1245,7 +1309,7 @@ function LeetifyCard() {
                                 </div>
                             </div>
                         ) : (
-                            <div style={{ marginTop: 8, color: "var(--muted)" }}>
+                            <div style={{marginTop: 8, color: "var(--muted)"}}>
                                 No recent matches
                             </div>
                         )}
@@ -1266,7 +1330,7 @@ function LeetifyCard() {
                         href="https://leetify.com"
                         target="_blank"
                         rel="noreferrer"
-                        style={{ color: "var(--accent)" }}
+                        style={{color: "var(--accent)"}}
                     >
                         Leetify
                     </a>
@@ -1290,7 +1354,8 @@ function renownProgressInTier(renown) {
     const span = rank.max - rank.min + 1;
     return Math.max(0, Math.min(1, (n - rank.min) / span));
 }
-function ProjectProgress({ progress }) {
+
+function ProjectProgress({progress}) {
     const count = useMotionValue(0);
     const rounded = useTransform(count, (latest) => Math.round(latest));
     const [displayValue, setDisplayValue] = useState(0);
@@ -1318,10 +1383,10 @@ function ProjectProgress({ progress }) {
             <div className="progress-bar">
                 <motion.div
                     className="progress-fill"
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${progress}%` }}
-                    transition={{ duration: 3, ease: "easeOut" }}
-                    viewport={{ once: true }}
+                    initial={{width: 0}}
+                    whileInView={{width: `${progress}%`}}
+                    transition={{duration: 3, ease: "easeOut"}}
+                    viewport={{once: true}}
                 />
             </div>
             <div className="progress-label">{displayValue}%</div>

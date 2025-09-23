@@ -367,7 +367,7 @@
 }
 .achievements-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 
@@ -503,6 +503,181 @@
   transition: background 0.1s linear;
   z-index: 0;
 }
+.burger-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1300; /* higher than the menu */
+  background: var(--card);
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text);
+}
+.burger-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 260px;
+  z-index: 1200;
+  padding: 32px 24px;
+
+  /* Premium frosted look */
+  background: linear-gradient(
+          145deg,
+          rgba(7, 16, 41, 0.7),
+          rgba(11, 26, 43, 0.65)
+  );
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.45);
+  border-radius: 0 20px 20px 0; /* subtle curve on the right side */
+}
+
+/* Section links */
+.menu-link {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: left;
+  color: var(--text);
+  background: none;
+  border: none;
+  padding: 12px 0;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.menu-link:hover {
+  color: var(--accent);
+  text-shadow: 0 0 12px rgba(139, 92, 246, 0.5); /* glowing hover */
+}
+
+/* Divider line */
+.menu-divider {
+  height: 1px;
+  background: linear-gradient(
+          to right,
+          transparent,
+          rgba(255, 255, 255, 0.08),
+          transparent
+  );
+  margin: 6px 0;
+}
+
+/* Theme button (bottom) */
+.theme-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--card-alt), rgba(139, 92, 246, 0.25));
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1),
+  0 4px 14px rgba(0, 0, 0, 0.25);
+  margin-bottom: 40px;
+}
+
+.theme-btn:hover {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 0 16px var(--accent);
+  transform: translateY(-2px);
+}
+
+
+
+
+
+
+.menu-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 50px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 6px;
+}
+
+.menu-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+
+
+
+
+
+
+.menu-spacer {
+  flex-grow: 1;
+}
+
+/* THEME BUTTON */
+
+
+
+
+
+
+
+:root[data-theme="light"] {
+  --bg: #f3f4f6;     /* light gray background */
+  --card: #ffffff;   /* pure white cards */
+  --card-alt: #f9fafb; /* slightly off-white alt */
+  --text: #111827;   /* dark gray text */
+  --muted: #6b7280;  /* muted gray */
+  --accent: #8b5cf6; /* same purple accent */
+}
+
+:root[data-theme="light"] body,
+:root[data-theme="light"] .page {
+  background: var(--bg);
+  color: var(--text);
+}
+
+:root[data-theme="light"] .card,
+:root[data-theme="light"] .project-card,
+:root[data-theme="light"] .setup-item,
+:root[data-theme="light"] .burger-menu {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  color: var(--text);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.spotify-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--card-alt);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+
+
 
 .footer {
   margin-top: 8px;
