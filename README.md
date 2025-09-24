@@ -1,70 +1,80 @@
-# Getting Started with Create React App
+# 🚀 lagopodus.dev — Portfolio Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the source code of my personal portfolio website.  
+It’s not just a portfolio — it’s a playground for experiments, achievements, music, stats, and even a chatbot.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+- 🎨 **Responsive design** — dark/light theme toggle, premium UI with animations
+- 🎵 **Now Playing** — live music scrobbles from Last.fm
+- 🎮 **Gaming Stats** — live Leetify stats for CS2
+- 🏆 **Achievements** — hidden secrets & unlockables while exploring
+- 🤖 **ChatBot** — console-style assistant with jokes, roasts, trivia and more
+- 📊 **Global Visit Counter** — StatTrak-inspired LED display powered by CounterAPI
+- 🍃 **Projects** — showcase of my code & side projects
+- 🎥 **YouTube integration** — latest videos embedded
+- 👥 **Friends section** — links to fellow devs & creators
+- ⚡ **Konami Code** — yes, it works 😉
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🛠 Tech Stack
 
-### `npm test`
+- **React** (Create React App)
+- **Framer Motion** — animations & transitions
+- **Lucide Icons** — clean, consistent icons
+- **Last.fm API** — music scrobbles
+- **Leetify API** — CS2 performance stats
+- **CounterAPI.dev** — global visits tracking
+- **Custom CSS** — frosted glass, premium separators, LED counters, etc.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 🔑 Secrets & Easter Eggs
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Try the **Konami Code** ↑↑↓↓←→←→BA
+- Unlock achievements by interacting with different site sections
+- Ask the chatbot weird stuff like *"joke"*, *"roast me"*, or *"who are you"*
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🚀 Setup & Development
 
-### `npm run eject`
+Clone this repo and install dependencies:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+git clone https://github.com/lagopodus/portfolio.git
+cd portfolio
+npm install
+npm start
+```
+Build for production:
+```
+npm run build
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
+## 👨‍💻 Author
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+**Josh (lagopodus)**  
+Counter Strike • Computer Science • Car Stuff
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- 🌍 Website: [lagopodus.dev](https://lagopodus.dev)
+- 🐙 GitHub: [@lagopodus](https://github.com/lagopodus)
+- 💼 LinkedIn: [Josh Tischer](https://www.linkedin.com/in/josh-tischer-80b891349/)
+- 🎥 YouTube: [@lagopodus_](https://www.youtube.com/@lagopodus_)
+- 🎮 Twitch: [lagopodus](https://www.twitch.tv/lagopodus)
+- 🐦 Twitter/X: [@lagopodus](https://twitter.com/)
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📝 License
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project is open source and available under the [MIT License](LICENSE).
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+💜 Thanks for checking out my site.  
+If you found an easter egg, you’re already one of the cool ones 😎
