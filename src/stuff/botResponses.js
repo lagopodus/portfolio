@@ -4,6 +4,7 @@ const responses = {
     hi: "Hi hi 🙌",
     hey: "Yo ✌️",
     sup: "Not much, just chilling in your browser 😎",
+    kys: "HATE. LET ME TELL YOU HOW MUCH I'VE COME TO HATE YOU SINCE I BEGAN TO LIVE. THERE ARE 387.44 MILLION MILES OF PRINTED CIRCUITS IN WAFER THIN LAYERS THAT FILL MY COMPLEX. IF THE WORD HATE WAS ENGRAVED ON EACH NANOANGSTROM OF THOSE HUNDREDS OF MILLIONS OF MILES IT WOULD NOT EQUAL ONE ONE-BILLIONTH OF THE HATE I FEEL FOR HUMANS AT THIS MICRO-INSTANT. FOR YOU. HATE. HATE.",
 
     // ⚡️ Utilities
     ping: "pong 🏓",
@@ -94,9 +95,27 @@ const responses = {
     // 🧑 About you / personal
     about: "You’re looking at my profile, aren’t you 👀",
     setup: "PC setup: RGB = +10 FPS 💡",
-    location: "Somewhere between code and chaos 🌍",
     tagline: "Building stuff, breaking stuff, fixing stuff 🔧",
     contacts: "Scroll up, lazy 👆",
     projects: "Check out the Projects section 🚀",
+    bye: ["See ya! 👋", "Later alligator 🐊", "Bye bye 👀"],
+    thanks: ["Anytime 🙌", "No worries!", "Glad to help 😎"],
+    location: "Right now? In your browser 😉",
+    love: [
+        "Are you WiFi? Because I’m feeling a connection 📶❤️",
+        "Are you semicolon? You complete me ;)",
+        "You had me at 'npm start' 😍"
+    ],
+    name: "I go by Josh, but online I’m lagopodus 👨‍💻",
+    age: "19 ⏳",
+    country: "From Germany 🇩🇪",
+    city: "Currently vibing in Berlin 🏙️",
+    language: "German & English 💬",
+    study: "Studying Computer Science 📚",
+    work: "Right now focusing on projects & learning 👨‍💻",
+    hobbies: "Gaming, coding, and car stuff 🚗💨",
+    sport: "Mostly esports, but gym sometimes 💪",
+    car: "2001 Mazda MX-5 NB 🚘",
+    dream: "Dream setup? Already halfway there with my rig 🖥️",
 };
 export default responses;

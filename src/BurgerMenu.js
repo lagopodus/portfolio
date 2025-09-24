@@ -1,7 +1,20 @@
 // BurgerMenu.js
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import {
+    Menu,
+    X,
+    Sun,
+    Moon,
+    Trophy,
+    User,
+    Music,
+    Folders,
+    ChartLine,
+    Users,
+    Laptop,
+    Gamepad2
+} from "lucide-react";
 
 export default function BurgerMenu({ toggleTheme, theme }) {
     const [open, setOpen] = useState(false);
@@ -16,6 +29,17 @@ export default function BurgerMenu({ toggleTheme, theme }) {
         { id: "achievements", label: "Achievements" },
         { id: "games", label: "Favourite Games" },
     ];
+
+    const ICONS = {
+        about: <User size={20} />,   // GitHub purple
+        music: <Music size={20} />,      // stays gold
+        projects: <Folders size={20}  />, // keep red
+        stats: <ChartLine size={20}  />, // light blue (accuracy vibe)
+        friends: <Users size={20}  />,       // green (friendly)
+        setup: <Laptop size={20} />, // violet/purple (taste/favorites)
+        achievements: <Trophy size={20} />,        // locked = gray
+        games: <Gamepad2 size={20}  />,   // yellow/golden star
+    };
 
     const handleScroll = (id) => {
         document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -71,26 +95,58 @@ export default function BurgerMenu({ toggleTheme, theme }) {
                                 onClick={() => setOpen(false)}
                                 aria-label="Close menu"
                             >
-                                <X size={28} />
+                                <X size={28}/>
                             </button>
                         </div>
 
                         {/* Animated nav */}
+                        {/* Animated nav */}
                         <motion.nav className="menu-nav">
-                            {sections.map((s) => (
-                                <motion.button
-                                    key={s.id}
-                                    onClick={() => handleScroll(s.id)}
-                                    className="menu-link"
-                                    variants={linkVariants}
-                                >
-                                    {s.label}
-                                </motion.button>
+                            {/* Headline */}
+                            <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4 }}
+                                className="menu-headline"
+                            >
+                                Navigator
+                            </motion.div>
+
+                            {sections.map((s, i) => (
+                                <React.Fragment key={s.id}>
+                                    <motion.button
+                                        onClick={() => handleScroll(s.id)}
+                                        className="menu-link"
+                                        variants={linkVariants}
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 8, // 👈 space between icon & text
+                                        }}
+                                    >
+        <span style={{ fontSize: 16, display: "flex", alignItems: "center" }}>
+          {React.cloneElement(ICONS[s.id], { size: 16 })}
+        </span>
+                                        <span>{s.label}</span>
+                                    </motion.button>
+
+                                    {/* Premium separator */}
+                                    {i < sections.length - 1 && (
+                                        <motion.div
+                                            className="menu-separator"
+                                            initial={{ opacity: 0, scaleX: 0 }}
+                                            animate={{ opacity: 1, scaleX: 1 }}
+                                            transition={{ duration: 0.3 }}
+                                        />
+                                    )}
+                                </React.Fragment>
                             ))}
                         </motion.nav>
 
+
+
                         {/* Spacer pushes theme button down */}
-                        <div className="menu-spacer" />
+                        <div className="menu-spacer"/>
 
                         {/* Theme toggle */}
                         <motion.button
@@ -98,7 +154,7 @@ export default function BurgerMenu({ toggleTheme, theme }) {
                             className="theme-btn"
                             variants={linkVariants}
                         >
-                            {theme === "dark" ? <Sun size={22} /> : <Moon size={22} />}
+                            {theme === "dark" ? <Sun size={22}/> : <Moon size={22}/>}
                         </motion.button>
                     </motion.aside>
                 )}

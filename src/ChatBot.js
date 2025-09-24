@@ -114,12 +114,14 @@ export default function ChatbotWidget({ responses }) {
                         >
                             TerminalBot
                             <button
+                                aria-label="Chatbot"
                                 onClick={() => setOpen(false)}
                                 style={{
                                     background: "transparent",
                                     border: "none",
                                     color: "white",
                                     cursor: "pointer",
+
                                 }}
                             >
                                 <X size={20} />

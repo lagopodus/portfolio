@@ -13,7 +13,7 @@ import {
     Linkedin,
     Youtube,
     Twitch,
-    Twitter,
+    Instagram,
     MapPin,
     Star,
     Trophy,
@@ -30,7 +30,8 @@ import {
     Headphones,
     Lock,
     BookHeart,
-    BadgeQuestionMark
+    BadgeQuestionMark,
+    MapPinned
 } from "lucide-react";
 import "./App.css";
 import BurgerMenu from "./BurgerMenu";
@@ -56,7 +57,7 @@ const projects = [
         title: "Portfolio",
         desc: "The page you are viewing right now.",
         link: "https://github.com/lagopodus/portfolio",
-        progress: 80,
+        progress: 90,
     },
     {
         title: "Unreal Engine FPS Game",
@@ -343,9 +344,9 @@ function MainApp() {
                            rel="noopener noreferrer">
                             <Twitch size={16}/> <span style={{marginLeft: 8}}>Twitch</span>
                         </a>
-                        <a className="contact-btn" href="https://twitter.com/" target="_blank"
+                        <a className="contact-btn" href="https://instagram.com/yoschi.bln" target="_blank"
                            rel="noopener noreferrer">
-                            <Twitter size={16}/> <span style={{marginLeft: 8}}>Twitter</span>
+                            <Instagram size={16}/> <span style={{marginLeft: 8}}>Instagram</span>
                         </a>
                     </div>
                 </section>
@@ -364,7 +365,7 @@ function MainApp() {
                         flexWrap: "wrap"
                     }}>
                         <div style={{flex: 1, minWidth: 280}}>
-                            <h2 className="section-title gradient-text">About</h2>
+                            <h3 className="section-title gradient-text">About</h3>
                             {aboutText && (
                                 <p className="text">
                                     <i>{aboutText.quote}<br/></i>
@@ -1027,7 +1028,7 @@ function LeetifyCard() {
                                 borderRadius: 12,
                             }}
                         >
-                            <Crosshair size={18} style={{color: "#f87171"}}/>
+                            <MapPinned size={18} style={{color: "#fabf2c"}}/>
                             <div style={{fontWeight: 900, color: "var(--text)"}}>
                                 {profile.rating.positioning.toFixed(1)}
                             </div>
