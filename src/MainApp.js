@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAchievements } from "./AchievementContext";
 import NowPlaying from "./NowPlaying";
+import ChatBot from "./ChatBot";
+import responses from "./stuff/botResponses"
+import aboutTexts  from "./stuff/quotes"
+import GlobalVisitsCounter from "./GlobalVisitsCounter";
 import {
     Github,
     User,
@@ -12,7 +16,6 @@ import {
     Twitter,
     MapPin,
     Star,
-    Gamepad2,
     Trophy,
     Zap,
     Crosshair,
@@ -31,24 +34,7 @@ import {
 } from "lucide-react";
 import "./App.css";
 import BurgerMenu from "./BurgerMenu";
-import { motion, useMotionValue, useTransform, animate, AnimatePresence  } from "framer-motion";
-
-
-const aboutTexts = [
-    { quote: "„Ich fahr nicht gerne Motorrad, weil es cool ist, ich fahr gerne Motorrad, weil ich es gerne fahr. Basta. Abgesehen davon, fahr ich kein Motorrad.“", author: "Rainer Winkler" },
-    { quote: "„Meddler sind wesentlich stärker als billiche, kleine Kaggnadsis.“", author: "Meddl Lord" },
-    { quote: "„Ich bin ned der Drache ferdammde Aggsd!“", author: "Der Drache" },
-    { quote: "„Ich bin alleine wie das Mammut... aber... es ist völlig irrelevant, denn, ob ihr 5 Menschen seid oder 100 oder 1.000 oder 10.000, 100.000 oder Millionen. das Mammut hier steht noch.“", author: "Mammut Lord" },
-    { quote: "„Das is mein Ferd der Blu.“", author: "Rainer" },
-    { quote: "„Blu gehört mir ned, hat mir noch nie gehört. Das war noch nie mein Ferd.“", author: "Rainer" },
-    { quote: "„So jetzt habt ihr richtig Scheiße am Arsch. Die ham jetz hier n Großalarm bei mir ausgerufne, etzala fliegt ihr raus.“", author: "Drachenlord" },
-    { quote: "„Ich hab schon mehr Schwänze im Mund ghabt als dei Mudda!“", author: "Lustlord" },
-    { quote: "„Ich bin einerseits ein sehr fetter Mensch, aber auch ein sehr fitter Mensch.“", author: "Fitnesslord" },
-    { quote: "„Hädde Columbus Amerika nie entdeckt, wären Indianer heute sowas wie Elfen.“", author: "Amerikalord" },
-    { quote: "„Ich hasse Menschen, die andere Menschen hassen.“", author: "Hasslord" },
-    { quote: "„Irgendeiner, ig weiß net wer is mir auch scheißegal. Ich weiß net wer es war. Irgendwer hat meine Schwester mit ner PC-Computerstimme angerufen.“", author: "Bruderlord" },
-];
-
+import { motion, useMotionValue, useTransform, animate  } from "framer-motion";
 const getPremierColor = (rank) => {
     if (rank < 5000) return "grey";
     if (rank < 10000) return "lightblue";
@@ -180,6 +166,7 @@ export const ACHIEVEMENTS = [
         unlocked: false
     }
 ];
+
 const ICONS = {
     github: <Github size={20} style={{ color: "#6e5494" }} />,   // GitHub purple
     trophy: <Trophy size={20} style={{ color: "gold" }} />,      // stays gold
@@ -194,13 +181,10 @@ const ICONS = {
 
 };
 
-
-
 function MainApp() {
     const [aboutText, setAboutText] = useState(null);
     const { achievements, unlock, lastUnlocked, setLastUnlocked } = useAchievements();
     const allUnlocked = achievements.every((a) => a.unlocked);
-    const [keys, setKeys] = useState([]);
     const [theme, setTheme] = useState("dark");
 
     useEffect(() => {
@@ -274,7 +258,7 @@ function MainApp() {
         if (visits >= 10) {
             unlock("ten-visits");
         }
-    }, [unlock]);
+    }, []);
     useEffect(() => {
         const random = aboutTexts[Math.floor(Math.random() * aboutTexts.length)];
         setAboutText(random);
@@ -287,7 +271,7 @@ function MainApp() {
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [unlock]);
+    }, []);
     useEffect(() => {
         if (lastUnlocked) {
             const timer = setTimeout(() => setLastUnlocked(null), 4000);
@@ -309,11 +293,13 @@ function MainApp() {
         <div className="page">
             <div className="particles"></div>
             <div className="spotlight"></div>
+            <ChatBot responses={responses} />
             <BurgerMenu toggleTheme={toggleTheme} theme={theme} />
 
 
             <main className="container">
-                <section className="hero">
+                <section className="hero"
+                         style={{display: "flex", justifyContent: "space-between", alignItems: "flex-start"}}>
                     <div className="hero-left">
                         <User
                             size={56}
@@ -335,6 +321,8 @@ function MainApp() {
                         </div>
                     </div>
 
+
+                    <GlobalVisitsCounter/>
 
 
                     <div className="contacts-top">
@@ -397,10 +385,10 @@ function MainApp() {
                 <MotionCard id="music" className="card">
                     <h2 className="section-title gradient-text">Music</h2>
 
-                        <NowPlaying
-                            username="lagopodus"
-                            apiKey="64c8ea82a1994cddc375f2f7550e31c8"
-                        />
+                    <NowPlaying
+                        username="lagopodus"
+                        apiKey="64c8ea82a1994cddc375f2f7550e31c8"
+                    />
 
                 </MotionCard>
 
@@ -416,7 +404,7 @@ function MainApp() {
                                 rel="noopener noreferrer"
                                 className="project-card"
                             >
-                            <div className="project-info">
+                                <div className="project-info">
                                     <Code size={18} style={{color: "var(--accent)"}}/>
                                     <div className="project-body">
                                         <div className="project-text">
@@ -426,7 +414,7 @@ function MainApp() {
 
                                         {/* Progress pinned to bottom */}
                                         <div className="project-progress">
-                                            <ProjectProgress progress={p.progress} />
+                                            <ProjectProgress progress={p.progress}/>
 
                                         </div>
                                     </div>
@@ -493,7 +481,7 @@ function MainApp() {
                             rel="noopener noreferrer"
                             className="setup-item"
                         >
-                            <Monitor size={20} style={{ color: "var(--accent)" }} />
+                            <Monitor size={20} style={{color: "var(--accent)"}}/>
                             <div>
                                 <div className="setup-title">Monitor 1</div>
                                 <div className="setup-text">24" 1080p 380Hz</div>
@@ -506,7 +494,7 @@ function MainApp() {
                             rel="noopener noreferrer"
                             className="setup-item"
                         >
-                            <Monitor size={20} style={{ color: "var(--accent)" }} />
+                            <Monitor size={20} style={{color: "var(--accent)"}}/>
                             <div>
                                 <div className="setup-title">Monitor 2</div>
                                 <div className="setup-text">27" 1440p 170Hz</div>
@@ -519,7 +507,7 @@ function MainApp() {
                             rel="noopener noreferrer"
                             className="setup-item"
                         >
-                            <Monitor size={20} style={{ color: "var(--accent)" }} />
+                            <Monitor size={20} style={{color: "var(--accent)"}}/>
                             <div>
                                 <div className="setup-title">Monitor 3</div>
                                 <div className="setup-text">24" 1080p 60Hz</div>
@@ -533,7 +521,7 @@ function MainApp() {
                             rel="noopener noreferrer"
                             className="setup-item"
                         >
-                            <Cpu size={20} style={{ color: "var(--accent)" }} />
+                            <Cpu size={20} style={{color: "var(--accent)"}}/>
                             <div>
                                 <div className="setup-title">CPU</div>
                                 <div className="setup-text">Ryzen 7 7800X3D</div>
@@ -547,7 +535,7 @@ function MainApp() {
                             rel="noopener noreferrer"
                             className="setup-item"
                         >
-                            <Gpu size={20} style={{ color: "var(--accent)" }} />
+                            <Gpu size={20} style={{color: "var(--accent)"}}/>
                             <div>
                                 <div className="setup-title">GPU</div>
                                 <div className="setup-text">NVIDIA RTX 4070 Ti Super</div>
@@ -561,7 +549,7 @@ function MainApp() {
                             rel="noopener noreferrer"
                             className="setup-item"
                         >
-                            <Keyboard size={20} style={{ color: "var(--accent)" }} />
+                            <Keyboard size={20} style={{color: "var(--accent)"}}/>
                             <div>
                                 <div className="setup-title">Keyboard</div>
                                 <div className="setup-text">Roccat Vulcan TKL</div>
@@ -575,7 +563,7 @@ function MainApp() {
                             rel="noopener noreferrer"
                             className="setup-item"
                         >
-                            <Mouse size={20} style={{ color: "var(--accent)" }} />
+                            <Mouse size={20} style={{color: "var(--accent)"}}/>
                             <div>
                                 <div className="setup-title">Mouse</div>
                                 <div className="setup-text">Logitech PRO X Superlight 2</div>
@@ -589,7 +577,7 @@ function MainApp() {
                             rel="noopener noreferrer"
                             className="setup-item"
                         >
-                            <Headphones size={20} style={{ color: "var(--accent)" }} />
+                            <Headphones size={20} style={{color: "var(--accent)"}}/>
                             <div>
                                 <div className="setup-title">Audio</div>
                                 <div className="setup-text">Logitech PRO X 2 LIGHTSPEED</div>
@@ -657,7 +645,7 @@ function MainApp() {
                     </div>
                 </MotionCard>
 
-                <AchievementPopup achievement={lastUnlocked} />
+                <AchievementPopup achievement={lastUnlocked}/>
 
 
                 <footer className="footer">
@@ -699,7 +687,6 @@ function Counter({ value, duration = 2000 }) {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
-        let start = 0;
         const end = parseInt(value.toString().replace(/\D/g, ""), 10);
         if (isNaN(end)) return;
 
@@ -834,7 +821,7 @@ function LatestYouTube() {
 
 function LeetifyCard() {
     const [profile, setProfile] = useState(null);
-    const { achievements, unlock, lastUnlocked, setLastUnlocked } = useAchievements();
+    const { unlock } = useAchievements();
     const steamId = "76561199146483679"; // your Steam64 ID
 
     useEffect(() => {
@@ -892,57 +879,16 @@ function LeetifyCard() {
 
 
     return (
-        <article
-            style={{
-                background: "var(--card-alt)",
-                minHeight: 240,
-                padding: 22,
-                borderRadius: 16,
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "stretch",
-                gap: 18,
-            }}
-        >
+        <article className="leetify-card">
             {/* Left: avatar + name */}
-            <div
-                style={{
-                    width: 140,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 12,
-                    paddingRight: 18,
-                    borderRight: "1px solid rgba(255,255,255,0.05)",
-                }}
-            >
-                <div
-                    style={{
-                        width: 96,
-                        height: 96,
-                        borderRadius: 14,
-                        overflow: "hidden",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "linear-gradient(180deg, rgba(139,92,246,0.14), rgba(139,92,246,0.04))",
-                        border: "1px solid rgba(255,255,255,0.02)",
-                    }}
-                >
-                    <img
-                        src="/gomme.jpg"
-                        alt="leetify"
-                        style={{width: "100%", height: "100%", objectFit: "cover"}}
-                    />
+            <div className="leetify-left">
+                <div className="leetify-avatar">
+                    <img src="/gomme.jpg" alt="leetify" />
                 </div>
 
-                <div style={{textAlign: "center"}}>
-                    <div style={{color: "var(--text)", fontWeight: 900, fontSize: 18}}>
-                        {profile.name}
-                    </div>
-                    <div style={{color: "var(--muted)", fontSize: 13, marginTop: 4}}>
-                        Leetify profile
-                    </div>
+                <div style={{ textAlign: "center" }}>
+                    <div className="leetify-name">{profile.name}</div>
+                    <div className="leetify-sub">Leetify profile</div>
                 </div>
 
                 <a
@@ -953,34 +899,14 @@ function LeetifyCard() {
                     rel="noreferrer"
                     onMouseDown={(e) => handleUnlockClick(e, "visit-leetify", unlock)}
                     onClick={(e) => handleUnlockClick(e, "visit-leetify", unlock)}
-                    style={{
-                        marginTop: 8,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 8,
-                        padding: "8px 12px",
-                        borderRadius: 999,
-                        background: "rgba(255,255,255,0.02)",
-                        color: "var(--accent)",
-                        textDecoration: "none",
-                        fontWeight: 800,
-                        fontSize: 13,
-                    }}
+                    className="leetify-link"
                 >
-                    <ExternalLink size={14}/> View
+                    <ExternalLink size={14} /> View
                 </a>
             </div>
 
-
-            {/* Middle: stats */}
-            <div
-                style={{
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 12,
-                }}
-            >
+            {/* Right: stats (your full existing code goes here) */}
+            <div className="leetify-right">
                 {/* Header badges */}
                 <div
                     style={{
