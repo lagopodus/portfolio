@@ -19,6 +19,8 @@ const PAYLINES = [
     [2, 2, 2, 2, 2],
 ];
 
+const TOPPER_LIGHTS = Array.from({ length: 7 });
+
 const randomSymbol = () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
 
 const createReels = () =>
@@ -36,6 +38,7 @@ function SlotMachine() {
     const [freeSpins, setFreeSpins] = useState(0);
     const [lastWin, setLastWin] = useState(0);
     const [winningCells, setWinningCells] = useState([]);
+    const [showWinBanner, setShowWinBanner] = useState(false);
 
     const symbolMap = useMemo(() => {
         const map = new Map();
@@ -163,6 +166,16 @@ function SlotMachine() {
     }, [balance, bet, calculateWins, freeSpins, spinning]);
 
     useEffect(() => {
+        if (lastWin > 0) {
+            setShowWinBanner(true);
+            const timeout = setTimeout(() => setShowWinBanner(false), 2000);
+            return () => clearTimeout(timeout);
+        }
+        setShowWinBanner(false);
+        return undefined;
+    }, [lastWin]);
+
+    useEffect(() => {
         if (autoplay && !spinning) {
             const timer = setTimeout(() => {
                 spin();
@@ -198,50 +211,95 @@ function SlotMachine() {
                 </div>
             </div>
 
-            <div className="slot-grid">
-                {reels.map((column, columnIndex) => (
-                    <div key={`col-${columnIndex}`} className="slot-column">
-                        {column.map((symbol, rowIndex) => (
-                            <div
-                                key={`cell-${columnIndex}-${rowIndex}`}
-                                className={`slot-symbol ${symbol.id.toLowerCase()} ${isWinningCell(columnIndex, rowIndex) ? "slot-symbol--win" : ""}`}
-                                style={{ borderColor: symbol.color }}
-                            >
-                                <span>{symbol.label}</span>
-                            </div>
+            <div className="slot-machine__cabinet">
+                <div className="slot-machine__handle" aria-hidden="true">
+                    <span className="slot-machine__handle-bar" />
+                    <span className="slot-machine__handle-knob" />
+                </div>
+                <div className="slot-machine__topper">
+                    <div className="slot-machine__logo">Book of Josh</div>
+                    <div className="slot-machine__lights">
+                        {TOPPER_LIGHTS.map((_, index) => (
+                            <span key={`light-${index}`} className="slot-machine__light" />
                         ))}
                     </div>
-                ))}
-            </div>
+                </div>
 
-            <div className="slot-machine__controls">
-                <label className="slot-machine__bet">
-                    Bet: <strong>{bet}</strong>
-                    <input
-                        type="range"
-                        min="1"
-                        max="50"
-                        step="1"
-                        value={bet}
-                        onChange={handleBetChange}
-                    />
-                </label>
-                <button
-                    className="spin-button"
-                    onClick={spin}
-                    disabled={spinning}
-                >
-                    {freeSpins > 0 ? "Play Free Spin" : spinning ? "Spinning..." : "Spin"}
-                </button>
-                <button
-                    className={`autoplay-button ${autoplay ? "autoplay-button--active" : ""}`}
-                    onClick={toggleAutoplay}
-                >
-                    {autoplay ? "Stop Autoplay" : "Autoplay"}
-                </button>
-            </div>
+                <div className="slot-machine__screen">
+                    <div className="slot-machine__reel-window">
+                        {showWinBanner && (
+                            <div className="slot-machine__win-banner">
+                                <span>WIN</span>
+                                <strong>+{lastWin}</strong>
+                            </div>
+                        )}
+                        <div className={`slot-grid ${spinning ? "slot-grid--spinning" : ""}`}>
+                            {reels.map((column, columnIndex) => (
+                                <div key={`col-${columnIndex}`} className="slot-column">
+                                    {column.map((symbol, rowIndex) => (
+                                        <div
+                                            key={`cell-${columnIndex}-${rowIndex}`}
+                                            className={`slot-symbol ${symbol.id.toLowerCase()} ${isWinningCell(columnIndex, rowIndex) ? "slot-symbol--win" : ""}`}
+                                            style={{ borderColor: symbol.color }}
+                                        >
+                                            <span>{symbol.label}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="slot-machine__status">
+                        <span className="slot-machine__status-label">Temple Log</span>
+                        <p>{message}</p>
+                    </div>
+                </div>
 
-            <div className="slot-machine__message">{message}</div>
+                <div className="slot-machine__panel">
+                    <div className="slot-machine__meters">
+                        <div className="slot-machine__meter">
+                            <span>Balance</span>
+                            <strong>{balance}</strong>
+                        </div>
+                        <div className="slot-machine__meter">
+                            <span>Last Win</span>
+                            <strong>{lastWin}</strong>
+                        </div>
+                        <div className={`slot-machine__meter ${freeSpins > 0 ? "slot-machine__meter--active" : ""}`}>
+                            <span>Free Spins</span>
+                            <strong>{freeSpins}</strong>
+                        </div>
+                    </div>
+
+                    <div className="slot-machine__controls">
+                        <label className="slot-machine__bet">
+                            Bet: <strong>{bet}</strong>
+                            <input
+                                type="range"
+                                min="1"
+                                max="50"
+                                step="1"
+                                value={bet}
+                                onChange={handleBetChange}
+                            />
+                        </label>
+                        <button
+                            className="spin-button"
+                            onClick={spin}
+                            disabled={spinning}
+                        >
+                            {freeSpins > 0 ? "Play Free Spin" : spinning ? "Spinning..." : "Spin"}
+                        </button>
+                        <button
+                            className={`autoplay-button ${autoplay ? "autoplay-button--active" : ""}`}
+                            onClick={toggleAutoplay}
+                        >
+                            {autoplay ? "Stop Autoplay" : "Autoplay"}
+                        </button>
+                    </div>
+                </div>
+                <div className="slot-machine__base" aria-hidden="true" />
+            </div>
         </div>
     );
 }
