@@ -1,14 +1,80 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 
 const SYMBOLS = [
-    { id: "10", label: "10", color: "#fcd34d", payout: { 3: 1, 4: 4, 5: 8 } },
-    { id: "J", label: "J", color: "#fb923c", payout: { 3: 2, 4: 6, 5: 10 } },
-    { id: "Q", label: "Q", color: "#f472b6", payout: { 3: 3, 4: 8, 5: 15 } },
-    { id: "K", label: "K", color: "#a855f7", payout: { 3: 5, 4: 12, 5: 25 } },
-    { id: "A", label: "A", color: "#60a5fa", payout: { 3: 6, 4: 14, 5: 30 } },
-    { id: "WILD", label: "Wild", color: "#facc15", payout: { 3: 10, 4: 25, 5: 60 }, isWild: true },
-    { id: "BONUS", label: "Bonus", color: "#38bdf8", isBonus: true },
-    { id: "SCARAB", label: "Relic", color: "#f97316", payout: { 3: 20, 4: 60, 5: 200 }, isSpecial: true },
+    {
+        id: "10",
+        label: "10",
+        rune: "✦",
+        primary: "#fde68a",
+        secondary: "#fbbf24",
+        accent: "#fef9c3",
+        payout: { 3: 1, 4: 4, 5: 8 },
+    },
+    {
+        id: "J",
+        label: "J",
+        rune: "𓂀",
+        primary: "#fb923c",
+        secondary: "#ea580c",
+        accent: "#fed7aa",
+        payout: { 3: 2, 4: 6, 5: 10 },
+    },
+    {
+        id: "Q",
+        label: "Q",
+        rune: "☽",
+        primary: "#f472b6",
+        secondary: "#db2777",
+        accent: "#fbcfe8",
+        payout: { 3: 3, 4: 8, 5: 15 },
+    },
+    {
+        id: "K",
+        label: "K",
+        rune: "☥",
+        primary: "#a855f7",
+        secondary: "#7c3aed",
+        accent: "#ddd6fe",
+        payout: { 3: 5, 4: 12, 5: 25 },
+    },
+    {
+        id: "A",
+        label: "A",
+        rune: "⚜",
+        primary: "#60a5fa",
+        secondary: "#2563eb",
+        accent: "#bfdbfe",
+        payout: { 3: 6, 4: 14, 5: 30 },
+    },
+    {
+        id: "WILD",
+        label: "Wild",
+        rune: "★",
+        primary: "#fde047",
+        secondary: "#f97316",
+        accent: "#fff7c4",
+        payout: { 3: 10, 4: 25, 5: 60 },
+        isWild: true,
+    },
+    {
+        id: "BONUS",
+        label: "Book",
+        rune: "📖",
+        primary: "#38bdf8",
+        secondary: "#0ea5e9",
+        accent: "#cffafe",
+        isBonus: true,
+    },
+    {
+        id: "SCARAB",
+        label: "Relic",
+        rune: "🪲",
+        primary: "#fb923c",
+        secondary: "#f43f5e",
+        accent: "#fed7aa",
+        payout: { 3: 20, 4: 60, 5: 200 },
+        isSpecial: true,
+    },
 ];
 
 const COLUMNS = 5;
@@ -283,6 +349,12 @@ function SlotMachine() {
     const isWinningCell = (columnIndex, rowIndex) =>
         winningCells.some((cell) => cell.column === columnIndex && cell.row === rowIndex);
 
+    const getSymbolStyle = (symbol) => ({
+        "--symbol-primary": symbol.primary,
+        "--symbol-secondary": symbol.secondary,
+        "--symbol-accent": symbol.accent || symbol.primary,
+    });
+
     return (
         <div className={`slot-machine ${spinning ? "slot-machine--active" : ""}`}>
             <div className="slot-machine__header">
@@ -352,7 +424,7 @@ function SlotMachine() {
                                             <div
                                                 className={`slot-column__track ${columnSpinning ? "slot-column__track--spinning" : ""}`}
                                                 style={{
-                                                    animationDuration: columnSpinning
+                                                    "--spin-speed": columnSpinning
                                                         ? `${0.6 + columnIndex * 0.05}s`
                                                         : undefined,
                                                     animationDelay: columnSpinning
@@ -368,10 +440,31 @@ function SlotMachine() {
                                                     return (
                                                         <div
                                                             key={cellKey}
-                                                            className={`slot-symbol ${symbol.id.toLowerCase()} ${showWin ? "slot-symbol--win" : ""} ${columnSpinning ? "slot-symbol--ghost" : ""}`}
-                                                            style={{ borderColor: symbol.color }}
+                                                            className={`slot-symbol slot-symbol--${symbol.id.toLowerCase()} ${showWin ? "slot-symbol--win" : ""} ${columnSpinning ? "slot-symbol--ghost" : ""}`}
+                                                            style={getSymbolStyle(symbol)}
                                                         >
-                                                            <span>{symbol.label}</span>
+                                                            <div className="slot-symbol__halo" aria-hidden="true" />
+                                                            <div className="slot-symbol__inner">
+                                                                <span className="slot-symbol__rune">{symbol.rune}</span>
+                                                                <span className="slot-symbol__label">{symbol.label}</span>
+                                                                {(symbol.isBonus || symbol.isWild || symbol.isSpecial) && (
+                                                                    <span
+                                                                        className={`slot-symbol__tag ${
+                                                                            symbol.isBonus
+                                                                                ? "slot-symbol__tag--bonus"
+                                                                                : symbol.isWild
+                                                                                    ? "slot-symbol__tag--wild"
+                                                                                    : "slot-symbol__tag--relic"
+                                                                        }`}
+                                                                    >
+                                                                        {symbol.isBonus
+                                                                            ? "Bonus"
+                                                                            : symbol.isWild
+                                                                                ? "Wild"
+                                                                                : "Relic"}
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     );
                                                 })}
