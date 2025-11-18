@@ -880,12 +880,12 @@ html, body {
 
 .slot-machine__cabinet {
   position: relative;
-  padding: 28px 28px 32px;
+  padding: 32px 32px 68px;
   border-radius: 24px 24px 36px 36px;
   background: radial-gradient(circle at top, rgba(250, 204, 21, 0.18), rgba(3, 5, 15, 0.95));
   border: 2px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 24px 40px rgba(0, 0, 0, 0.55), inset 0 0 40px rgba(12, 18, 40, 0.75);
-  overflow: hidden;
+  overflow: visible;
   transition: box-shadow 0.4s ease, transform 0.4s ease;
 }
 
@@ -1100,36 +1100,36 @@ html, body {
 }
 
 .slot-symbol {
-  --symbol-primary: #f7c45a;
-  --symbol-secondary: #f59e0b;
-  --symbol-accent: #fff7d4;
+  --symbol-primary: #c084fc;
+  --symbol-secondary: #8b5cf6;
+  --symbol-accent: #f5d0fe;
   height: 82px;
   border-radius: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   text-transform: uppercase;
-  color: #fff8e7;
-  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.7);
-  background-color: var(--symbol-secondary);
+  color: #f6f3ff;
+  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
   background-image:
-    linear-gradient(160deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0)),
-    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.24), transparent 55%);
-  box-shadow: inset 0 -6px 18px rgba(0, 0, 0, 0.55), 0 10px 24px rgba(0, 0, 0, 0.35);
+    linear-gradient(160deg, rgba(9, 10, 28, 0.85), rgba(12, 6, 24, 0.95)),
+    linear-gradient(120deg, var(--symbol-primary), var(--symbol-secondary));
+  box-shadow: inset 0 -10px 26px rgba(0, 0, 0, 0.55), 0 12px 26px rgba(7, 5, 15, 0.45);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .slot-symbol::before {
   content: "";
   position: absolute;
-  inset: 3px;
+  inset: 4px;
   border-radius: 14px;
-  background: linear-gradient(120deg, var(--symbol-primary), var(--symbol-secondary));
-  opacity: 0.35;
-  filter: blur(0.5px);
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.22), transparent 50%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.25), transparent 55%);
+  opacity: 0.65;
+  filter: blur(1px);
 }
 
 .slot-symbol__halo {
@@ -1138,7 +1138,7 @@ html, body {
   background:
     radial-gradient(circle, rgba(255, 255, 255, 0.35), transparent 55%),
     radial-gradient(circle, var(--symbol-accent, rgba(255, 255, 255, 0.3)), transparent 75%);
-  opacity: 0.5;
+  opacity: 0.4;
   mix-blend-mode: screen;
 }
 
@@ -1155,6 +1155,7 @@ html, body {
   font-size: 30px;
   line-height: 1;
   text-shadow: 0 10px 25px rgba(0, 0, 0, 0.65);
+  color: var(--symbol-accent);
 }
 
 .slot-symbol__label {
@@ -1169,10 +1170,10 @@ html, body {
   font-size: 10px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  background: rgba(13, 15, 35, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--symbol-accent);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
 }
 
 .slot-symbol__tag--wild {
@@ -1181,13 +1182,13 @@ html, body {
 }
 
 .slot-symbol__tag--bonus {
-  background: rgba(56, 189, 248, 0.25);
-  color: #7dd3fc;
+  background: rgba(14, 165, 233, 0.2);
+  color: #bae6fd;
 }
 
 .slot-symbol__tag--relic {
-  background: rgba(249, 115, 22, 0.25);
-  color: #fed7aa;
+  background: rgba(251, 191, 36, 0.2);
+  color: #fee9b2;
 }
 
 .slot-column--spinning .slot-symbol {
