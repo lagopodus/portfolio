@@ -32,6 +32,13 @@ const createReels = () =>
         Array.from({ length: ROWS }, () => randomSymbol())
     );
 
+const SPIN_TRACK_LENGTH = ROWS * 4;
+
+const generateSpinTrack = () => {
+    const base = Array.from({ length: SPIN_TRACK_LENGTH }, () => randomSymbol());
+    return [...base, ...base.slice(0, ROWS)];
+};
+
 function SlotMachine() {
     const [reels, setReels] = useState(createReels);
     const [bet, setBet] = useState(5);
@@ -45,6 +52,9 @@ function SlotMachine() {
     const [showWinBanner, setShowWinBanner] = useState(false);
     const [spinningColumns, setSpinningColumns] = useState(() => Array(COLUMNS).fill(false));
     const [celebration, setCelebration] = useState(null);
+    const [spinTracks, setSpinTracks] = useState(() =>
+        Array.from({ length: COLUMNS }, () => generateSpinTrack())
+    );
 
     const timeoutRef = useRef([]);
 
@@ -148,6 +158,7 @@ function SlotMachine() {
         }
 
         setSpinningColumns(Array(COLUMNS).fill(true));
+        setSpinTracks(Array.from({ length: COLUMNS }, () => generateSpinTrack()));
 
         const newReels = createReels();
 
@@ -239,6 +250,20 @@ function SlotMachine() {
     }, [celebration]);
 
     useEffect(() => {
+        if (!spinningColumns.some(Boolean)) {
+            return undefined;
+        }
+        const interval = setInterval(() => {
+            setSpinTracks((prev) =>
+                prev.map((track, columnIndex) =>
+                    spinningColumns[columnIndex] ? generateSpinTrack() : track
+                )
+            );
+        }, 220);
+        return () => clearInterval(interval);
+    }, [spinningColumns]);
+
+    useEffect(() => {
         if (autoplay && !spinning) {
             const timer = setTimeout(() => {
                 spin();
@@ -313,22 +338,48 @@ function SlotMachine() {
                             </div>
                         )}
                         <div className={`slot-grid ${spinning ? "slot-grid--spinning" : ""}`}>
-                            {reels.map((column, columnIndex) => (
-                                <div
-                                    key={`col-${columnIndex}`}
-                                    className={`slot-column ${spinningColumns[columnIndex] ? "slot-column--spinning" : ""}`}
-                                >
-                                    {column.map((symbol, rowIndex) => (
-                                        <div
-                                            key={`cell-${columnIndex}-${rowIndex}`}
-                                            className={`slot-symbol ${symbol.id.toLowerCase()} ${isWinningCell(columnIndex, rowIndex) ? "slot-symbol--win" : ""}`}
-                                            style={{ borderColor: symbol.color }}
-                                        >
-                                            <span>{symbol.label}</span>
+                            {reels.map((column, columnIndex) => {
+                                const columnSpinning = spinningColumns[columnIndex];
+                                const symbolsToRender = columnSpinning
+                                    ? spinTracks[columnIndex] || []
+                                    : column;
+                                return (
+                                    <div
+                                        key={`col-${columnIndex}`}
+                                        className={`slot-column ${columnSpinning ? "slot-column--spinning" : ""}`}
+                                    >
+                                        <div className="slot-column__mask">
+                                            <div
+                                                className={`slot-column__track ${columnSpinning ? "slot-column__track--spinning" : ""}`}
+                                                style={{
+                                                    animationDuration: columnSpinning
+                                                        ? `${0.6 + columnIndex * 0.05}s`
+                                                        : undefined,
+                                                    animationDelay: columnSpinning
+                                                        ? `${columnIndex * 0.08}s`
+                                                        : undefined,
+                                                }}
+                                            >
+                                                {symbolsToRender.map((symbol, rowIndex) => {
+                                                    const showWin = !spinning && isWinningCell(columnIndex, rowIndex);
+                                                    const cellKey = columnSpinning
+                                                        ? `spin-${columnIndex}-${rowIndex}`
+                                                        : `cell-${columnIndex}-${rowIndex}`;
+                                                    return (
+                                                        <div
+                                                            key={cellKey}
+                                                            className={`slot-symbol ${symbol.id.toLowerCase()} ${showWin ? "slot-symbol--win" : ""} ${columnSpinning ? "slot-symbol--ghost" : ""}`}
+                                                            style={{ borderColor: symbol.color }}
+                                                        >
+                                                            <span>{symbol.label}</span>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
-                                    ))}
-                                </div>
-                            ))}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                     <div className="slot-machine__status">
