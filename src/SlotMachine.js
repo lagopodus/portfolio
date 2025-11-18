@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 
 const SYMBOLS = [
     { id: "10", label: "10", color: "#fcd34d", payout: { 3: 1, 4: 4, 5: 8 } },
@@ -23,6 +23,10 @@ const TOPPER_LIGHTS = Array.from({ length: 7 });
 
 const randomSymbol = () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
 
+const COLUMN_STOP_DELAY = 240;
+const SPIN_INTRO_DELAY = 450;
+const RESULT_BUFFER = 420;
+
 const createReels = () =>
     Array.from({ length: COLUMNS }, () =>
         Array.from({ length: ROWS }, () => randomSymbol())
@@ -39,6 +43,17 @@ function SlotMachine() {
     const [lastWin, setLastWin] = useState(0);
     const [winningCells, setWinningCells] = useState([]);
     const [showWinBanner, setShowWinBanner] = useState(false);
+    const [spinningColumns, setSpinningColumns] = useState(() => Array(COLUMNS).fill(false));
+    const [celebration, setCelebration] = useState(null);
+
+    const timeoutRef = useRef([]);
+
+    const clearPendingTimeouts = useCallback(() => {
+        timeoutRef.current.forEach(clearTimeout);
+        timeoutRef.current = [];
+    }, []);
+
+    useEffect(() => () => clearPendingTimeouts(), [clearPendingTimeouts]);
 
     const symbolMap = useMemo(() => {
         const map = new Map();
@@ -124,19 +139,46 @@ function SlotMachine() {
             return;
         }
 
+        clearPendingTimeouts();
         setSpinning(true);
+        setCelebration(null);
         setWinningCells([]);
         if (cost > 0) {
             setBalance((prev) => prev - cost);
         }
 
+        setSpinningColumns(Array(COLUMNS).fill(true));
+
         const newReels = createReels();
-        setTimeout(() => {
+
+        const scheduleTimeout = (callback, delay) => {
+            const id = setTimeout(callback, delay);
+            timeoutRef.current.push(id);
+        };
+
+        scheduleTimeout(() => {
             setReels(newReels);
+        }, SPIN_INTRO_DELAY);
+
+        for (let columnIndex = 0; columnIndex < COLUMNS; columnIndex += 1) {
+            scheduleTimeout(() => {
+                setSpinningColumns((prev) => {
+                    const next = [...prev];
+                    next[columnIndex] = false;
+                    return next;
+                });
+            }, SPIN_INTRO_DELAY + columnIndex * COLUMN_STOP_DELAY);
+        }
+
+        const resolutionDelay = SPIN_INTRO_DELAY + COLUMNS * COLUMN_STOP_DELAY + RESULT_BUFFER;
+
+        scheduleTimeout(() => {
             const { totalWin, highlights, lines, bonusCount } = calculateWins(newReels);
             setWinningCells(highlights);
             setLastWin(totalWin);
             setBalance((prev) => prev + totalWin);
+            setSpinningColumns(Array(COLUMNS).fill(false));
+
             const messageParts = [];
             if (lines.length > 0) {
                 messageParts.push(
@@ -150,6 +192,19 @@ function SlotMachine() {
             }
             setMessage(messageParts.length > 0 ? messageParts.join(" \u2022 ") : "Nothing this time.");
 
+            setCelebration(() => {
+                if (bonusCount >= 3) {
+                    return { type: "bonus", freeSpins: 10 };
+                }
+                if (totalWin >= bet * 30) {
+                    return { type: "epic", amount: totalWin };
+                }
+                if (totalWin >= bet * 12) {
+                    return { type: "big", amount: totalWin };
+                }
+                return null;
+            });
+
             setFreeSpins((prev) => {
                 let updated = prev;
                 if (prev > 0) {
@@ -162,8 +217,8 @@ function SlotMachine() {
             });
 
             setSpinning(false);
-        }, 500);
-    }, [balance, bet, calculateWins, freeSpins, spinning]);
+        }, resolutionDelay);
+    }, [balance, bet, calculateWins, clearPendingTimeouts, freeSpins, spinning]);
 
     useEffect(() => {
         if (lastWin > 0) {
@@ -174,6 +229,14 @@ function SlotMachine() {
         setShowWinBanner(false);
         return undefined;
     }, [lastWin]);
+
+    useEffect(() => {
+        if (celebration) {
+            const timeout = setTimeout(() => setCelebration(null), 4500);
+            return () => clearTimeout(timeout);
+        }
+        return undefined;
+    }, [celebration]);
 
     useEffect(() => {
         if (autoplay && !spinning) {
@@ -196,7 +259,7 @@ function SlotMachine() {
         winningCells.some((cell) => cell.column === columnIndex && cell.row === rowIndex);
 
     return (
-        <div className="slot-machine">
+        <div className={`slot-machine ${spinning ? "slot-machine--active" : ""}`}>
             <div className="slot-machine__header">
                 <div>
                     <h2>Book of Josh</h2>
@@ -227,6 +290,22 @@ function SlotMachine() {
 
                 <div className="slot-machine__screen">
                     <div className="slot-machine__reel-window">
+                        {celebration && (
+                            <div className={`slot-machine__mega-banner slot-machine__mega-banner--${celebration.type}`}>
+                                <span>
+                                    {celebration.type === "bonus"
+                                        ? "FREE SPINS UNLOCKED"
+                                        : celebration.type === "epic"
+                                            ? "EPIC WIN"
+                                            : "BIG WIN"}
+                                </span>
+                                <strong>
+                                    {celebration.type === "bonus"
+                                        ? `+${celebration.freeSpins} Spins`
+                                        : `+${celebration.amount}`}
+                                </strong>
+                            </div>
+                        )}
                         {showWinBanner && (
                             <div className="slot-machine__win-banner">
                                 <span>WIN</span>
@@ -235,7 +314,10 @@ function SlotMachine() {
                         )}
                         <div className={`slot-grid ${spinning ? "slot-grid--spinning" : ""}`}>
                             {reels.map((column, columnIndex) => (
-                                <div key={`col-${columnIndex}`} className="slot-column">
+                                <div
+                                    key={`col-${columnIndex}`}
+                                    className={`slot-column ${spinningColumns[columnIndex] ? "slot-column--spinning" : ""}`}
+                                >
                                     {column.map((symbol, rowIndex) => (
                                         <div
                                             key={`cell-${columnIndex}-${rowIndex}`}
