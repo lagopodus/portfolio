@@ -5,6 +5,7 @@ import ChatBot from "./ChatBot";
 import responses from "./stuff/botResponses"
 import aboutTexts  from "./stuff/quotes"
 import GlobalVisitsCounter from "./GlobalVisitsCounter";
+import SlotMachine from "./SlotMachine";
 import {
     Github,
     User,
@@ -443,6 +444,10 @@ function MainApp() {
                     <div className="projects-grid">
                         <LeetifyCard/>
                     </div>
+                </MotionCard>
+
+                <MotionCard id="book-of-josh" className="card">
+                    <SlotMachine />
                 </MotionCard>
 
                 {/* Friends + YouTube */}
