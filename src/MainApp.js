@@ -293,6 +293,163 @@ const routineIcons = {
     map: <MapPinned size={18} style={{ color: "var(--accent)" }} />
 };
 
+const slotSymbols = [
+    { id: "star", label: "Star", icon: <Star size={28} /> },
+    { id: "trophy", label: "Trophy", icon: <Trophy size={28} /> },
+    { id: "zap", label: "Zap", icon: <Zap size={28} /> },
+    { id: "map", label: "Map", icon: <MapPinned size={28} /> },
+    { id: "cpu", label: "CPU", icon: <Cpu size={28} /> },
+    { id: "monitor", label: "Monitor", icon: <Monitor size={28} /> },
+    { id: "headphones", label: "Headset", icon: <Headphones size={28} /> }
+];
+
+function SlotMachine() {
+    const [status, setStatus] = useState("idle");
+    const [currentSymbols, setCurrentSymbols] = useState(() => {
+        const stored = localStorage.getItem("slot-last");
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                if (Array.isArray(parsed.symbols) && parsed.symbols.length === 3) {
+                    return parsed.symbols;
+                }
+            } catch (e) {
+                // ignore
+            }
+        }
+        return Array(3)
+            .fill(null)
+            .map(() => slotSymbols[Math.floor(Math.random() * slotSymbols.length)].id);
+    });
+    const [resolved, setResolved] = useState(() => {
+        const stored = localStorage.getItem("slot-last");
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch (e) {
+                return null;
+            }
+        }
+        return null;
+    });
+    const spinIntervals = useRef([]);
+    const stopTimeouts = useRef([]);
+
+    useEffect(() => {
+        return () => {
+            spinIntervals.current.forEach((id) => clearInterval(id));
+            stopTimeouts.current.forEach((id) => clearTimeout(id));
+            spinIntervals.current = [];
+            stopTimeouts.current = [];
+        };
+    }, []);
+
+    const computeMessage = (symbols) => {
+        const [a, b, c] = symbols;
+        if (a === b && b === c) {
+            return `Jackpot! Triple ${slotSymbols.find((s) => s.id === a)?.label ?? "match"}.`;
+        }
+        if (a === b || a === c || b === c) {
+            return "Close one — you pulled a pair!";
+        }
+        return "Keep grinding for that renown glow.";
+    };
+
+    const spin = () => {
+        if (status === "spinning") return;
+        spinIntervals.current.forEach((id) => clearInterval(id));
+        stopTimeouts.current.forEach((id) => clearTimeout(id));
+        spinIntervals.current = [];
+        stopTimeouts.current = [];
+
+        setStatus("spinning");
+        const finalSymbols = Array(3)
+            .fill(null)
+            .map(() => slotSymbols[Math.floor(Math.random() * slotSymbols.length)].id);
+
+        const intervals = [120, 140, 160];
+        intervals.forEach((interval, reelIndex) => {
+            const intervalId = setInterval(() => {
+                setCurrentSymbols((prev) => {
+                    const next = [...prev];
+                    next[reelIndex] = slotSymbols[Math.floor(Math.random() * slotSymbols.length)].id;
+                    return next;
+                });
+            }, interval);
+            spinIntervals.current.push(intervalId);
+
+            const stopTimer = setTimeout(() => {
+                clearInterval(intervalId);
+                setCurrentSymbols((prev) => {
+                    const next = [...prev];
+                    next[reelIndex] = finalSymbols[reelIndex];
+                    return next;
+                });
+                if (reelIndex === 2) {
+                    const result = { symbols: finalSymbols, message: computeMessage(finalSymbols) };
+                    setResolved(result);
+                    localStorage.setItem("slot-last", JSON.stringify(result));
+                    setStatus("resolved");
+                }
+            }, 1200 + reelIndex * 260);
+            stopTimeouts.current.push(stopTimer);
+        });
+    };
+
+    return (
+        <MotionCard className="card slot-machine-card" id="slot">
+            <div className="slot-header">
+                <div>
+                    <p className="eyebrow">Renown Raffle</p>
+                    <h3 className="section-title gradient-text">Slot Machine</h3>
+                    <p className="slot-sub">Spin the reels to match my favorite gadgets.</p>
+                </div>
+                <div className={`slot-status slot-status-${status}`}>
+                    {status === "idle" && "Idle"}
+                    {status === "spinning" && "Spinning"}
+                    {status === "resolved" && "Resolved"}
+                </div>
+            </div>
+
+            <div className="slot-cabinet">
+                <div className="slot-reels">
+                    {currentSymbols.map((symbolId, index) => {
+                        const symbol = slotSymbols.find((s) => s.id === symbolId) ?? slotSymbols[0];
+                        return (
+                            <div className="slot-reel" key={`${symbolId}-${index}`}>
+                                <motion.div
+                                    key={symbolId + status}
+                                    initial={{ y: -30, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    exit={{ y: 30, opacity: 0 }}
+                                    transition={{ duration: 0.25, ease: "easeOut" }}
+                                    className="slot-symbol"
+                                >
+                                    {symbol.icon}
+                                    <span>{symbol.label}</span>
+                                </motion.div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <div className="slot-controls">
+                    <button
+                        className="slot-button"
+                        onClick={spin}
+                        disabled={status === "spinning"}
+                    >
+                        {status === "spinning" ? "Spinning..." : "Spin"}
+                    </button>
+                    <div className="slot-result">
+                        {resolved?.message ?? "Cached result will show here."}
+                    </div>
+                </div>
+            </div>
+        </MotionCard>
+    );
+}
+
 function MainApp() {
     const [aboutText, setAboutText] = useState(null);
     const { achievements, unlock, lastUnlocked, setLastUnlocked } = useAchievements();
@@ -479,6 +636,8 @@ function MainApp() {
                     achievement={lastUnlocked}
                     onClose={() => setLastUnlocked(null)}
                 />
+
+                <SlotMachine />
 
                 {/* About */}
                 <MotionCard id="about" className="card">
