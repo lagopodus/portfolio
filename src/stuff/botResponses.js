@@ -8,8 +8,11 @@ const responses = {
 
     // ⚡️ Utilities
     ping: "pong 🏓",
-    help: "Try asking: ping, github, secret, favourite game, joke, meme, stats, now playing, setup",
+    help: "Commands: theme (toggle), about (jump), github (open), music (play/pause). Also try: ping, secret, favourite game, joke, meme, stats, now playing, setup",
+    commands: "Try commands like 'theme', 'about', 'github', or 'music' for quick actions.",
     github: "Find my code on GitHub 👉 https://github.com/lagopodus",
+    theme: "Say 'theme' and I'll flip the lights for you.",
+    about: "Type 'about' and I'll scroll you down there.",
     website: "This *is* the website, silly 😏",
     portfolio: "Check out my projects in the Projects section 🚀",
 
@@ -23,7 +26,7 @@ const responses = {
     gg: "EZ PZ LEMON SQUEEZY 🍋",
 
     // 🎵 Music
-    music: "Music makes the code flow 🎶",
+    music: "Music makes the code flow 🎶 (say 'music' to play/pause the badge)",
     "favourite artist": "The one in your headphones right now 🎧",
     spotify: "Hook me up with Spotify and I’ll vibe 🎵",
     "now playing": "Check the Now Playing card 👀",

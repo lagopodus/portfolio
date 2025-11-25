@@ -217,6 +217,7 @@ function MainApp() {
     const { achievements, unlock, lastUnlocked, setLastUnlocked } = useAchievements();
     const allUnlocked = achievements.every((a) => a.unlocked);
     const [theme, setTheme] = useState("dark");
+    const [isMusicPlaying, setIsMusicPlaying] = useState(true);
 
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", theme);
@@ -224,6 +225,22 @@ function MainApp() {
 
     const toggleTheme = () => {
         setTheme((t) => (t === "dark" ? "light" : "dark"));
+    };
+
+    const scrollToAbout = () => {
+        const section = document.getElementById("about");
+        if (section) {
+            section.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+
+    const openGithub = () => {
+        unlock("visit-github");
+        window.open("https://github.com/lagopodus", "_blank", "noopener,noreferrer");
+    };
+
+    const toggleMusic = () => {
+        setIsMusicPlaying((prev) => !prev);
     };
 
 
@@ -324,7 +341,15 @@ function MainApp() {
         <div className="page">
             <div className="particles"></div>
             <div className="spotlight"></div>
-            <ChatBot responses={responses} />
+            <ChatBot
+                responses={responses}
+                actions={{
+                    toggleTheme,
+                    scrollToAbout,
+                    openGithub,
+                    toggleMusic,
+                }}
+            />
             <BurgerMenu toggleTheme={toggleTheme} theme={theme} />
 
 
@@ -414,7 +439,31 @@ function MainApp() {
                 </MotionCard>
 
                 <MotionCard id="music" className="card">
-                    <h2 className="section-title gradient-text">Music</h2>
+                    <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap"}}>
+                        <h2 className="section-title gradient-text">Music</h2>
+                        <span
+                            style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 8,
+                                padding: "8px 12px",
+                                borderRadius: 999,
+                                background: "rgba(139,92,246,0.15)",
+                                color: "var(--text)",
+                                border: "1px solid rgba(139,92,246,0.35)",
+                                fontWeight: 600,
+                            }}
+                        >
+                            <span style={{
+                                width: 8,
+                                height: 8,
+                                borderRadius: "50%",
+                                background: isMusicPlaying ? "#22c55e" : "#f59e0b",
+                                boxShadow: isMusicPlaying ? "0 0 8px #22c55e" : "none",
+                            }} />
+                            {isMusicPlaying ? "Now playing" : "Playback paused"}
+                        </span>
+                    </div>
 
                     <NowPlaying
                         username="lagopodus"
