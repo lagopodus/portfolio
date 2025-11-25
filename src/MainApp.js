@@ -132,7 +132,7 @@ const favouriteGames = [
         name: "Counter Strike 2",
         tagline: "Tactical FPS comfort pick",
         review: "Live servers are the best and worst classroom — every round is a case study in spacing, utility and tempo. CS2 keeps the discipline sharp.",
-        loadout: "AK-47 / Desert Eagle / HE + flash for instant retakes",
+        loadout: "AK-47 / HE + flash for instant retakes",
         tip: "Play for early space with a late lurk; the round flips when you break the defender crossfire.",
         url: "https://store.steampowered.com/app/730/CounterStrike_Global_Offensive/"
     },
@@ -141,7 +141,7 @@ const favouriteGames = [
         name: "Elden Ring",
         tagline: "Open-world boss routing",
         review: "FromSoftware finally let me get lost. I love sprinting past a dragon at level 10, then returning much later with a polished build and a grudge.",
-        loadout: "Moonveil Katana + Carian Sorceries",
+        loadout: "Double Katana",
         tip: "Stack stance breaks with jump-heavy attacks, then punish with a charged R2.",
         url: "https://store.steampowered.com/app/1245620/ELDEN_RING/"
     },
@@ -151,7 +151,7 @@ const favouriteGames = [
         tagline: "Where patience became muscle memory",
         review: "Bonfire to boss is a meditative loop. No fast travel in the early game makes every shortcut you unlock feel like mastery.",
         loadout: "Claymore + Grass Crest Shield",
-        tip: "Two-hand for stagger, then swap to shield only when stamina is low or projectiles fly.",
+        tip: "Shield for parry, then swap to Two-Hand for crit.",
         url: "https://store.steampowered.com/app/570940/DARK_SOULS_REMASTERED/"
     },
     {
@@ -168,7 +168,7 @@ const favouriteGames = [
         name: "Hearthstone",
         tagline: "Card gaming between queues",
         review: "A perfect palette cleanser. I theorycraft during CS2 queues, then stress-test lists on ladder — discovering greedy lines is the fun part.",
-        loadout: "Highlander Mage / Thief Rogue",
+        loadout: "Highlander Mage / Hyper Aggro Shadow Priest",
         tip: "Bank cheap discovers for swing turns; holding one mana spell generators keeps secrets and combos flexible.",
         url: "https://hearthstone.blizzard.com/"
     },
