@@ -31,7 +31,11 @@ import {
     Lock,
     BookHeart,
     BadgeQuestionMark,
-    MapPinned
+    MapPinned,
+    Gamepad2,
+    Compass,
+    Sparkles,
+    Shield
 } from "lucide-react";
 import "./App.css";
 import BurgerMenu from "./BurgerMenu";
@@ -100,6 +104,25 @@ const videos = [
     {title: "alexinabox", link: "https://alexinabox.de/"},
     {title: "Theo", link: "https://theocloud.dev/"},
     {title: "Domi", link: "https://github.com/AuriomTex"},
+];
+
+const STRAT_MAPS = ["Mirage", "Inferno", "Overpass", "Vertigo", "Nuke", "Anubis"];
+const STRAT_ROLES = ["Entry", "Lurker", "Support", "IGL", "AWPer"];
+const STRAT_PAYLOADS = [
+    "15 min DM HS only before queue",
+    "Utility lineups: 2x execs, 1x fake",
+    "Anti-eco farm with MAC-10",
+    "Contact walk to punish rotates",
+    "Default into late round split",
+    "Fast B pop with layered flashes"
+];
+const STRAT_TWISTS = [
+    "Mute music for clutch focus",
+    "No scope toggle for one round",
+    "Only buy utility if you call it",
+    "Flash for every swing",
+    "Clear every angle with two players",
+    "Drop your fanciest skin to the top fragger"
 ];
 
 export const ACHIEVEMENTS = [
@@ -182,11 +205,24 @@ const ICONS = {
 
 };
 
+const getRandom = (list) => list[Math.floor(Math.random() * list.length)];
+const createStrat = ({ map, role } = {}) => ({
+    map: map ?? getRandom(STRAT_MAPS),
+    role: role ?? getRandom(STRAT_ROLES),
+    payload: getRandom(STRAT_PAYLOADS),
+    twist: getRandom(STRAT_TWISTS)
+});
+
 function MainApp() {
     const [aboutText, setAboutText] = useState(null);
     const { achievements, unlock, lastUnlocked, setLastUnlocked } = useAchievements();
     const allUnlocked = achievements.every((a) => a.unlocked);
     const [theme, setTheme] = useState("dark");
+    const [strategy, setStrategy] = useState(() => createStrat());
+    const [lockMap, setLockMap] = useState(false);
+    const [lockRole, setLockRole] = useState(false);
+    const [isRolling, setIsRolling] = useState(false);
+    const [rolls, setRolls] = useState(0);
 
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", theme);
@@ -194,6 +230,20 @@ function MainApp() {
 
     const toggleTheme = () => {
         setTheme((t) => (t === "dark" ? "light" : "dark"));
+    };
+
+    const rerollStrategy = () => {
+        setIsRolling(true);
+        setTimeout(() => {
+            setStrategy((prev) =>
+                createStrat({
+                    map: lockMap ? prev.map : undefined,
+                    role: lockRole ? prev.role : undefined,
+                })
+            );
+            setRolls((r) => r + 1);
+            setIsRolling(false);
+        }, 220);
     };
 
 
@@ -442,6 +492,77 @@ function MainApp() {
                     <h2 className="section-title gradient-text">Gaming Stats</h2>
                     <div className="projects-grid">
                         <LeetifyCard/>
+                    </div>
+                </MotionCard>
+
+                <MotionCard id="strat-lab" className="card strat-card">
+                    <div className="strat-header">
+                        <div>
+                            <p className="eyebrow">
+                                <Gamepad2 size={14} style={{marginRight: 6}}/>
+                                Strat Lab
+                            </p>
+                            <h2 className="section-title gradient-text">Spin up a round idea</h2>
+                            <p className="text" style={{marginTop: -6}}>Micro callouts to keep your stack on the same page.</p>
+                        </div>
+                        <button
+                            className="strat-roll-btn"
+                            onClick={rerollStrategy}
+                            disabled={isRolling}
+                        >
+                            {isRolling ? "Rolling..." : "Reroll"}
+                        </button>
+                    </div>
+
+                    <div className={`strat-grid ${isRolling ? "strat-rolling" : ""}`}>
+                        <div className="strat-pill">
+                            <Compass size={16} />
+                            <div>
+                                <div className="pill-label">Map</div>
+                                <div className="pill-value">{strategy.map}</div>
+                            </div>
+                        </div>
+                        <div className="strat-pill">
+                            <Shield size={16} />
+                            <div>
+                                <div className="pill-label">Role</div>
+                                <div className="pill-value">{strategy.role}</div>
+                            </div>
+                        </div>
+                        <div className="strat-pill">
+                            <Zap size={16} />
+                            <div>
+                                <div className="pill-label">Playcall</div>
+                                <div className="pill-value">{strategy.payload}</div>
+                            </div>
+                        </div>
+                        <div className="strat-pill">
+                            <Sparkles size={16} />
+                            <div>
+                                <div className="pill-label">Extra Spice</div>
+                                <div className="pill-value">{strategy.twist}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="strat-controls">
+                        <label className={`toggle-chip ${lockMap ? "active" : ""}`}>
+                            <input
+                                type="checkbox"
+                                checked={lockMap}
+                                onChange={(e) => setLockMap(e.target.checked)}
+                            />
+                            Keep this map
+                        </label>
+                        <label className={`toggle-chip ${lockRole ? "active" : ""}`}>
+                            <input
+                                type="checkbox"
+                                checked={lockRole}
+                                onChange={(e) => setLockRole(e.target.checked)}
+                            />
+                            Keep this role
+                        </label>
+                        <span className="roll-count">{rolls} rerolls</span>
                     </div>
                 </MotionCard>
 

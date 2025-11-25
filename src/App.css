@@ -406,6 +406,123 @@
   box-shadow: 0 4px 10px rgba(139, 92, 246, 0.12);
 }
 
+.strat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.strat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.strat-roll-btn {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(145deg, rgba(139,92,246,0.16), rgba(96,165,250,0.1));
+  color: var(--text);
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.strat-roll-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.strat-roll-btn:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 18px rgba(139,92,246,0.2);
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.strat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.strat-pill {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--card-alt);
+  align-items: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  transition: transform 0.2s ease;
+}
+
+.strat-rolling .strat-pill {
+  transform: translateY(-2px);
+}
+
+.pill-label {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.pill-value {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.strat-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggle-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--card-alt);
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.2s ease;
+  font-weight: 700;
+}
+
+.toggle-chip input {
+  accent-color: var(--accent);
+}
+
+.toggle-chip.active {
+  color: var(--text);
+  border-color: rgba(139,92,246,0.4);
+  box-shadow: 0 6px 14px rgba(139,92,246,0.18);
+}
+
+.roll-count {
+  color: var(--muted);
+  font-size: 13px;
+  margin-left: auto;
+}
+
 .link-inline {
   display: inline-flex;
   align-items: center;
