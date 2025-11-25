@@ -5,6 +5,7 @@ import ChatBot from "./ChatBot";
 import responses from "./stuff/botResponses"
 import aboutTexts  from "./stuff/quotes"
 import GlobalVisitsCounter from "./GlobalVisitsCounter";
+import SlotMachine from "./SlotMachine";
 import {
     Github,
     User,
@@ -611,6 +612,14 @@ function MainApp() {
                             </div>
                         ))}
                     </div>
+                </MotionCard>
+
+                <MotionCard className="card slot-card">
+                    <h2 className="section-title gradient-text">Arcade</h2>
+                    <p className="text" style={{ marginTop: 4 }}>
+                        A purple neon slot machine, inspired by the visit counter's glow.
+                    </p>
+                    <SlotMachine />
                 </MotionCard>
 
                 {/* Friends + YouTube */}
