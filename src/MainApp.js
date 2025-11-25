@@ -102,6 +102,30 @@ const videos = [
     {title: "Domi", link: "https://github.com/AuriomTex"},
 ];
 
+const warmupRoutine = [
+    {
+        name: "15 min — DM HS only",
+        focus: "Crosshair discipline + strafe timing",
+        minutes: 15,
+        tip: "Headshot-only Faceit DM; reset after every swing.",
+        icon: "crosshair"
+    },
+    {
+        name: "Utility lineups: Mirage A exec",
+        focus: "Exec protocols + nade confidence",
+        minutes: 10,
+        tip: "Smoke stairs/jungle, CT pop-flash, molly default to clear plants.",
+        icon: "zap"
+    },
+    {
+        name: "Microflicks @ 400Hz",
+        focus: "KovaaK 3D micro-adjusts + recoil trims",
+        minutes: 8,
+        tip: "Short bursts, 1-2 bullet taps, track then snap.",
+        icon: "clock"
+    }
+];
+
 export const ACHIEVEMENTS = [
     {
         id: "visit-github",
@@ -180,6 +204,12 @@ const ICONS = {
     clock: <Clock size={20} style={{ color: "#60a5fa" }} />, // blue clock
     question: <BadgeQuestionMark size={20} style={{ color: "#fff" }} />, // blue clock
 
+};
+
+const routineIcons = {
+    crosshair: <Crosshair size={18} style={{ color: "var(--accent)" }} />,
+    zap: <Zap size={18} style={{ color: "var(--accent)" }} />,
+    clock: <Clock size={18} style={{ color: "var(--accent)" }} />
 };
 
 function MainApp() {
@@ -442,6 +472,38 @@ function MainApp() {
                     <h2 className="section-title gradient-text">Gaming Stats</h2>
                     <div className="projects-grid">
                         <LeetifyCard/>
+                    </div>
+                </MotionCard>
+
+                <MotionCard className="card routine-card">
+                    <h2 className="section-title gradient-text">Warmup Routine</h2>
+                    <div className="routine-steps">
+                        {warmupRoutine.map((step) => (
+                            <div className="routine-step" key={step.name}>
+                                <div className="routine-left">
+                                    <div className="routine-icon">
+                                        {routineIcons[step.icon]}
+                                    </div>
+                                    <div>
+                                        <div className="routine-title">{step.name}</div>
+                                        <div className="routine-subtext">{step.focus}</div>
+                                        {step.tip && <div className="routine-tip">{step.tip}</div>}
+                                    </div>
+                                </div>
+                                <div className="routine-meta">
+                                    <span className="routine-chip">
+                                        <Clock size={14} style={{ color: "var(--muted)" }} />
+                                        <span>{step.minutes} min</span>
+                                    </span>
+                                    {step.icon !== "clock" && (
+                                        <span className="routine-chip">
+                                            {routineIcons[step.icon]}
+                                            <span>Lock-in</span>
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </MotionCard>
 
