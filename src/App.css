@@ -202,9 +202,10 @@
   flex-direction: column;
   gap: 12px;
   padding: 14px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(11, 26, 43, 0.8), rgba(139, 92, 246, 0.08));
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: var(--card-alt);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
 
 .music-main {
@@ -279,10 +280,9 @@
 }
 
 .music-reaction {
-  background: rgba(139, 92, 246, 0.16);
+  background: rgba(139, 92, 246, 0.14);
   color: var(--accent);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 4px 8px;
   font-size: 12px;
   font-weight: 700;
@@ -292,31 +292,29 @@
 }
 
 .music-overlay {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px dashed rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 
 .overlay-label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--muted);
+  color: var(--text);
   font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  font-size: 13px;
 }
 
 .overlay-lyrics {
   color: var(--text);
   margin: 0;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .overlay-tags {
@@ -326,10 +324,9 @@
 }
 
 .overlay-tag {
-  background: rgba(139, 92, 246, 0.16);
-  border: 1px solid rgba(139, 92, 246, 0.25);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text);
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 999px;
   font-size: 12px;
 }
@@ -341,13 +338,23 @@
   align-items: center;
 }
 
-.toggle {
+.ghost-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.ghost-btn:hover {
+  background: rgba(139, 92, 246, 0.15);
+  transform: translateY(-1px);
 }
 
 .favorite-btn {

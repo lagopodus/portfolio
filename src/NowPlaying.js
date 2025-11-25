@@ -9,8 +9,7 @@ const sanitizeSummary = (summary) => summary?.replace(/<[^>]*>/g, "").trim();
 export default function NowPlaying({ username, apiKey }) {
     const [track, setTrack] = useState(null);
     const [meta, setMeta] = useState({ tags: [], lyricSnippet: "" });
-    const [showOverlay, setShowOverlay] = useState(true);
-    const [enableReactions, setEnableReactions] = useState(true);
+    const [showOverlay, setShowOverlay] = useState(false);
     const [favorites, setFavorites] = useState(() => {
         try {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -105,9 +104,8 @@ export default function NowPlaying({ username, apiKey }) {
                 key={`${activeTrackId}-${changeCount}`}
                 className="music-main"
                 initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0, scale: enableReactions ? 1.01 : 1 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, ease: "easeOut" }}
-                whileHover={{ scale: enableReactions ? 1.02 : 1 }}
             >
                 <div className="music-cover">
                     {track.image ? (
@@ -123,7 +121,7 @@ export default function NowPlaying({ username, apiKey }) {
                             {track.name}
                         </a>
                         <AnimatePresence>
-                            {enableReactions && track.nowPlaying && (
+                            {track.nowPlaying && (
                                 <motion.span
                                     key="pulse"
                                     className="music-reaction"
@@ -184,22 +182,9 @@ export default function NowPlaying({ username, apiKey }) {
             </AnimatePresence>
 
             <div className="music-controls">
-                <label className="toggle">
-                    <input
-                        type="checkbox"
-                        checked={enableReactions}
-                        onChange={(e) => setEnableReactions(e.target.checked)}
-                    />
-                    Reactions
-                </label>
-                <label className="toggle">
-                    <input
-                        type="checkbox"
-                        checked={showOverlay}
-                        onChange={(e) => setShowOverlay(e.target.checked)}
-                    />
-                    Lyrics & Genres
-                </label>
+                <button className="ghost-btn" onClick={() => setShowOverlay((v) => !v)}>
+                    <Layers size={14} /> {showOverlay ? "Hide details" : "Show details"}
+                </button>
                 <button className="favorite-btn" onClick={handleSaveFavorite} disabled={!track}>
                     <Heart size={14} /> Save track
                 </button>
