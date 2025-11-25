@@ -126,6 +126,72 @@ const warmupRoutine = [
     }
 ];
 
+const favouriteGames = [
+    {
+        id: "counter-strike-2",
+        name: "Counter Strike 2",
+        tagline: "Tactical FPS comfort pick",
+        review: "Live servers are the best and worst classroom — every round is a case study in spacing, utility and tempo. CS2 keeps the discipline sharp.",
+        loadout: "AK-47 / Desert Eagle / HE + flash for instant retakes",
+        tip: "Play for early space with a late lurk; the round flips when you break the defender crossfire.",
+        url: "https://store.steampowered.com/app/730/CounterStrike_Global_Offensive/"
+    },
+    {
+        id: "elden-ring",
+        name: "Elden Ring",
+        tagline: "Open-world boss routing",
+        review: "FromSoftware finally let me get lost. I love sprinting past a dragon at level 10, then returning much later with a polished build and a grudge.",
+        loadout: "Moonveil Katana + Carian Sorceries",
+        tip: "Stack stance breaks with jump-heavy attacks, then punish with a charged R2.",
+        url: "https://store.steampowered.com/app/1245620/ELDEN_RING/"
+    },
+    {
+        id: "dark-souls",
+        name: "Dark Souls",
+        tagline: "Where patience became muscle memory",
+        review: "Bonfire to boss is a meditative loop. No fast travel in the early game makes every shortcut you unlock feel like mastery.",
+        loadout: "Claymore + Grass Crest Shield",
+        tip: "Two-hand for stagger, then swap to shield only when stamina is low or projectiles fly.",
+        url: "https://store.steampowered.com/app/570940/DARK_SOULS_REMASTERED/"
+    },
+    {
+        id: "hollow-knight",
+        name: "Hollow Knight",
+        tagline: "Metroidvania precision",
+        review: "Hallownest rewards curiosity. Movement upgrades stack into this elegant dance — wall jumps, dash cancels and nail arts feel buttery smooth.",
+        loadout: "Nailmaster’s Glory + Mark of Pride",
+        tip: "Pre-charge Great Slash before re-engaging; it wins trades without costing extra soul.",
+        url: "https://store.steampowered.com/app/367520/Hollow_Knight/"
+    },
+    {
+        id: "hearthstone",
+        name: "Hearthstone",
+        tagline: "Card gaming between queues",
+        review: "A perfect palette cleanser. I theorycraft during CS2 queues, then stress-test lists on ladder — discovering greedy lines is the fun part.",
+        loadout: "Highlander Mage / Thief Rogue",
+        tip: "Bank cheap discovers for swing turns; holding one mana spell generators keeps secrets and combos flexible.",
+        url: "https://hearthstone.blizzard.com/"
+    },
+    {
+        id: "witcher-3",
+        name: "The Witcher III",
+        tagline: "Story pacing masterclass",
+        review: "Side quests feel like novellas. I replay to chase the quiet character beats — contracts, taverns, Gwent in the rain.",
+        loadout: "Ursine gear + Igni / Quen focus",
+        tip: "Prep oils and decoctions before every contract; igni melt plus heavy armor = comfy boss deletes.",
+        url: "https://store.steampowered.com/app/292030/The_Witcher_3_Wild_Hunt/"
+    },
+    {
+        id: "remnant",
+        name: "Remnant: From the Ashes",
+        tagline: "Co-op rolls and roguelite spice",
+        review: "Procedural worlds keep co-op fresh. It’s the perfect middle ground between Souls combat and looter excitement.",
+        loadout: "Hunting Pistol + Devastator + Void armor",
+        tip: "Dodge diagonally through boss swipes; stagger windows open up when you mix mod power with weak-spot discipline.",
+        url: "https://store.steampowered.com/app/617290/Remnant_From_the_Ashes/"
+    }
+];
+
 export const ACHIEVEMENTS = [
     {
         id: "visit-github",
@@ -170,6 +236,13 @@ export const ACHIEVEMENTS = [
         unlocked: false
     },
     {
+        id: "lore-hunter",
+        title: "Lore Hunter",
+        desc: "Opened multiple favourite game breakdowns",
+        icon: "map",
+        unlocked: false
+    },
+    {
         id: "ten-visits",
         title: "Regular Visitor",
         desc: "Visited the site 10 times",
@@ -199,6 +272,7 @@ const ICONS = {
     crosshair: <Crosshair size={20} style={{ color: "#60a5fa" }} />, // light blue (accuracy vibe)
     user: <User size={20} style={{ color: "#22c55e" }} />,       // green (friendly)
     bookheart: <BookHeart size={20} style={{ color: "#a855f7" }} />, // violet/purple (taste/favorites)
+    map: <MapPinned size={20} style={{ color: "#22d3ee" }} />,
     locked: <Lock size={20} style={{ color: "gray" }} />,        // locked = gray
     star: <Star size={20} style={{ color: "#facc15" }} />,   // yellow/golden star
     clock: <Clock size={20} style={{ color: "#60a5fa" }} />, // blue clock
@@ -217,6 +291,7 @@ function MainApp() {
     const { achievements, unlock, lastUnlocked, setLastUnlocked } = useAchievements();
     const allUnlocked = achievements.every((a) => a.unlocked);
     const [theme, setTheme] = useState("dark");
+    const [openedGames, setOpenedGames] = useState([]);
 
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", theme);
@@ -224,6 +299,19 @@ function MainApp() {
 
     const toggleTheme = () => {
         setTheme((t) => (t === "dark" ? "light" : "dark"));
+    };
+
+    const handleGameOpen = (id) => {
+        setOpenedGames((prev) => {
+            if (prev.includes(id)) return prev;
+
+            const next = [...prev, id];
+            if (next.length >= 3) {
+                unlock("lore-hunter");
+            }
+
+            return next;
+        });
     };
 
 
@@ -673,37 +761,10 @@ function MainApp() {
                 {/* Favourite Games */}
                 <MotionCard id="games" className="card">
                     <h2 className="section-title gradient-text">Favourite Games</h2>
-                    <div style={{display: "flex", gap: 8, flexWrap: "wrap"}}>
-                        {[
-                            {
-                                name: "Counter Strike 2",
-                                url: "https://store.steampowered.com/app/730/CounterStrike_Global_Offensive/"
-                            },
-                            {name: "Elden Ring", url: "https://store.steampowered.com/app/1245620/ELDEN_RING/"},
-                            {
-                                name: "Dark Souls",
-                                url: "https://store.steampowered.com/app/570940/DARK_SOULS_REMASTERED/"
-                            },
-                            {
-                                name: "Hollow Knight",
-                                url: "https://store.steampowered.com/app/367520/Hollow_Knight/"
-                            },
-                            {name: "Hearthstone", url: "https://hearthstone.blizzard.com/"},
-                            {
-                                name: "The Witcher III",
-                                url: "https://store.steampowered.com/app/292030/The_Witcher_3_Wild_Hunt/"
-                            },
-                            {
-                                name: "Remnant: From the Ashes",
-                                url: "https://store.steampowered.com/app/617290/Remnant_From_the_Ashes/"
-                            },
-                        ].map((game) => (
-                            <a key={game.name} href={game.url} target="_blank" rel="noopener noreferrer"
-                               className="skill-pill"
-                               onMouseDown={(e) => handleUnlockClick(e, "visit-steam", unlock)}
-                               onClick={(e) => handleUnlockClick(e, "visit-steam", unlock)}>
-                                {game.name}
-                            </a>
+                    <p className="section-subtext">Click a card to see a mini-review, favourite loadout, and a quick strategy note.</p>
+                    <div className="game-grid">
+                        {favouriteGames.map((game) => (
+                            <GameCard key={game.id} game={game} onOpen={handleGameOpen}/>
                         ))}
                     </div>
                 </MotionCard>
@@ -726,6 +787,71 @@ function handleUnlockClick(e, id, unlock) {
     if (e.button === 0 || e.button === 1 || e.ctrlKey || e.metaKey) {
         unlock(id);
     }
+}
+
+function GameCard({ game, onOpen }) {
+    const [open, setOpen] = useState(false);
+    const { unlock } = useAchievements();
+
+    const toggleOpen = () => {
+        setOpen((prev) => {
+            const next = !prev;
+            if (next) {
+                onOpen?.(game.id);
+            }
+            return next;
+        });
+    };
+
+    const handleSteamClick = (e) => {
+        handleUnlockClick(e, "visit-steam", unlock);
+    };
+
+    return (
+        <div className={`game-card ${open ? "open" : ""}`}>
+            <button
+                className="game-card-header"
+                onClick={toggleOpen}
+                aria-expanded={open}
+                aria-controls={`${game.id}-details`}
+            >
+                <div>
+                    <div className="game-card-title">{game.name}</div>
+                    <div className="game-card-tagline">{game.tagline}</div>
+                </div>
+                <span className="game-card-chevron" aria-hidden="true">{open ? "−" : "+"}</span>
+            </button>
+            <div
+                className="game-card-body"
+                id={`${game.id}-details`}
+                aria-hidden={!open}
+            >
+                <div className="game-card-content">
+                    <p className="game-card-review">{game.review}</p>
+                    <div className="game-card-meta-grid">
+                        <div>
+                            <div className="meta-label">Favorite Loadout</div>
+                            <div className="meta-value">{game.loadout}</div>
+                        </div>
+                        <div>
+                            <div className="meta-label">Strategy Tip</div>
+                            <div className="meta-value">{game.tip}</div>
+                        </div>
+                    </div>
+                    <a
+                        className="game-card-link"
+                        href={game.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onMouseDown={handleSteamClick}
+                        onClick={handleSteamClick}
+                    >
+                        View store page <ExternalLink size={16} />
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 function AchievementPopup({ achievement }) {

@@ -676,6 +676,133 @@
   transform: scale(1.05);
 }
 
+.section-subtext {
+  color: var(--muted);
+  margin-top: -6px;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.game-card {
+  background: var(--card-alt);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
+}
+
+.game-card-header {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s ease;
+}
+
+.game-card-header:hover,
+.game-card-header:focus-visible {
+  outline: none;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.08), rgba(139, 92, 246, 0.02));
+}
+
+.game-card-title {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.game-card-tagline {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.game-card-chevron {
+  font-size: 22px;
+  color: var(--accent);
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+
+.game-card.open .game-card-chevron {
+  transform: rotate(180deg);
+}
+
+.game-card-body {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: max-height 0.35s ease, opacity 0.3s ease, transform 0.35s ease;
+}
+
+.game-card.open .game-card-body {
+  max-height: 400px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.game-card-content {
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--muted);
+}
+
+.game-card-review {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.game-card-meta-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.meta-label {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.meta-value {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.game-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.game-card-link:hover {
+  text-decoration: underline;
+}
+
 .routine-card {
   display: flex;
   flex-direction: column;
