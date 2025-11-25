@@ -109,7 +109,7 @@ const warmupRoutine = [
         minutes: 10,
         tip: "Run 180/360 sweeps and burst-fire for head level discipline.",
         icon: "crosshair",
-        workshopLink: "https://steamcommunity.com/sharedfiles/filedetails/?id=3070758981",
+        workshopLink: "https://steamcommunity.com/sharedfiles/filedetails/?id=3070244462",
         workshopLabel: "AIMBOTZ - Training"
     },
     {
@@ -127,7 +127,7 @@ const warmupRoutine = [
         minutes: 7,
         tip: "Treat it like intervals: burst of speed, then reset stance and breathing.",
         icon: "zap",
-        workshopLink: "https://steamcommunity.com/sharedfiles/filedetails/?id=3070244462",
+        workshopLink: "https://steamcommunity.com/sharedfiles/filedetails/?id=3070758981",
         workshopLabel: "CS2 Reflex Flick Trainer"
     }
 ];
