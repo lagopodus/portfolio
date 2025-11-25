@@ -1292,8 +1292,259 @@
   font-size: 13px;
 }
 
+.slot-card {
+  overflow: hidden;
+}
+
+.slot-machine {
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  background: radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.15), rgba(7, 24, 39, 0.95)),
+  radial-gradient(circle at 90% 10%, rgba(96, 165, 250, 0.1), transparent 35%),
+  var(--card-alt);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.18), inset 0 0 12px rgba(255, 255, 255, 0.04);
+}
+
+.slot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.slot-led {
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 2px;
+  font-weight: 800;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #0a0f1f;
+  color: #a855f7;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.4), inset 0 0 6px rgba(255, 255, 255, 0.08);
+}
+
+.slot-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.slot-pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.5);
+  box-shadow: 0 0 6px rgba(148, 163, 184, 0.6);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slot-pip[data-active="true"] {
+  background: #a855f7;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.9), 0 0 18px rgba(168, 85, 247, 0.5);
+}
+
+.slot-frame {
+  border-radius: 16px;
+  padding: 14px;
+  background: linear-gradient(145deg, rgba(10, 16, 32, 0.95), rgba(16, 24, 45, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.35), 0 0 22px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.slot-frame--win {
+  border-color: rgba(34, 197, 94, 0.5);
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.35), inset 0 0 10px rgba(34, 197, 94, 0.1);
+}
+
+.slot-frame--near {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 0 26px rgba(168, 85, 247, 0.3), inset 0 0 10px rgba(168, 85, 247, 0.1);
+}
+
+.slot-reels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.slot-reel {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6));
+  border: 1px solid rgba(168, 85, 247, 0.16);
+  border-radius: 12px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: inset 0 -6px 18px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slot-reel--spinning {
+  animation: slot-wiggle 0.9s ease-in-out infinite;
+  box-shadow: inset 0 -6px 20px rgba(168, 85, 247, 0.2);
+}
+
+@keyframes slot-wiggle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.slot-cell {
+  font-size: 46px;
+  text-shadow: 0 0 12px rgba(168, 85, 247, 0.45);
+}
+
+.slot-sub {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+
+.slot-controls {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.slot-button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(168, 85, 247, 0.6);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.8), rgba(99, 102, 241, 0.8));
+  color: white;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  box-shadow: 0 8px 22px rgba(168, 85, 247, 0.3);
+}
+
+.slot-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.slot-button:not(:disabled):hover {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 10px 26px rgba(168, 85, 247, 0.35);
+}
+
+.slot-message {
+  color: var(--muted);
+  font-size: 14px;
+}
+
 html, body {
   max-width: 100%;
   overflow-x: hidden;
 }
 
+/* All Lucide icons in the reels */
+.slot-icon {
+  width: 46px;
+  height: 46px;
+  stroke-width: 2.4;
+  stroke: #a855f7; /* accent purple */
+  filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.55));
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+/* When spinning — make icons pulse */
+.slot-reel--spinning .slot-icon {
+  animation: slot-spin-pulse 0.6s ease-in-out infinite;
+}
+
+@keyframes slot-spin-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.35));
+  }
+  50% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 14px rgba(168, 85, 247, 0.85));
+  }
+}
+
+/* Reel lift effect during spin */
+.slot-reel--spinning {
+  transform: translateY(-3px);
+  box-shadow: inset 0 -6px 18px rgba(168, 85, 247, 0.25),
+  0 4px 16px rgba(168, 85, 247, 0.18);
+}
+
+/* Subtle hover micro-animation after spinning finishes */
+.slot-reel:hover:not(.slot-reel--spinning) .slot-icon {
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.85));
+}
+
+/* Win effect: bright green flash on icons */
+.slot-frame--win .slot-icon {
+  stroke: #22c55e;
+  filter: drop-shadow(0 0 14px rgba(34, 197, 94, 0.85));
+}
+
+/* Near miss: stronger purple glow */
+.slot-frame--near .slot-icon {
+  stroke: #a855f7;
+  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.9));
+}
+
+/* Slot frame glow pulse on win */
+.slot-frame--win {
+  animation: win-pulse 1.2s ease-in-out forwards;
+}
+
+@keyframes win-pulse {
+  0% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.45); }
+  45% { box-shadow: 0 0 50px rgba(34, 197, 94, 0.75); }
+  100% { box-shadow: 0 0 28px rgba(34, 197, 94, 0.55); }
+}
+
+/* Win sparkle effect (non-intrusive) */
+.slot-frame--win::after {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%);
+  opacity: 0;
+  animation: sparkle 1.4s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes sparkle {
+  0% { opacity: 0; }
+  40% { opacity: 0.35; }
+  100% { opacity: 0; }
+}
+
+/* Make sure slot-frame allows pseudo-elements */
+.slot-frame {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Extra readability for the message */
+.slot-message {
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-shadow: 0 0 4px rgba(0,0,0,0.4);
+}
+
+/* Polished spin button animation */
+.slot-button:not(:disabled):active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 4px 14px rgba(168, 85, 247, 0.2);
+}

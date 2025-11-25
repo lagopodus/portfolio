@@ -5,6 +5,7 @@ import ChatBot from "./ChatBot";
 import responses from "./stuff/botResponses"
 import aboutTexts  from "./stuff/quotes"
 import GlobalVisitsCounter from "./GlobalVisitsCounter";
+import SlotMachine from "./SlotMachine";
 import {
     Github,
     User,
@@ -611,6 +612,11 @@ function MainApp() {
                             </div>
                         ))}
                     </div>
+                </MotionCard>
+
+                <MotionCard className="card slot-card">
+                    <h2 className="section-title gradient-text">Arcade</h2>
+                    <SlotMachine />
                 </MotionCard>
 
                 {/* Friends + YouTube */}
