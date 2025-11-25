@@ -877,6 +877,16 @@
   font-weight: 700;
 }
 
+.routine-link {
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.routine-link:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
 @media (max-width: 640px) {
   .routine-step {
     flex-direction: column;
