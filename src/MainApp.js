@@ -104,25 +104,31 @@ const videos = [
 
 const warmupRoutine = [
     {
-        name: "15 min — DM HS only",
-        focus: "Crosshair discipline + strafe timing",
-        minutes: 15,
-        tip: "Headshot-only Faceit DM; reset after every swing.",
-        icon: "crosshair"
-    },
-    {
-        name: "Utility lineups: Mirage A exec",
-        focus: "Exec protocols + nade confidence",
+        name: "AIMBOTZ — baseline clears",
+        focus: "Snappy taps + counter-strafes at multiple ranges",
         minutes: 10,
-        tip: "Smoke stairs/jungle, CT pop-flash, molly default to clear plants.",
-        icon: "zap"
+        tip: "Run 180/360 sweeps and burst-fire for head level discipline.",
+        icon: "crosshair",
+        workshopLink: "https://steamcommunity.com/sharedfiles/filedetails/?id=3070758981",
+        workshopLabel: "AIMBOTZ - Training"
     },
     {
-        name: "Microflicks @ 400Hz",
-        focus: "KovaaK 3D micro-adjusts + recoil trims",
+        name: "Dust 2 utility reps",
+        focus: "Lineup muscle memory + fast exec pacing",
         minutes: 8,
-        tip: "Short bursts, 1-2 bullet taps, track then snap.",
-        icon: "clock"
+        tip: "Cycle long/short smokes, flashes, and one-ways until they're automatic.",
+        icon: "map",
+        workshopLink: "https://steamcommunity.com/sharedfiles/filedetails/?id=3360435602",
+        workshopLabel: "Dust2 Utility Practice"
+    },
+    {
+        name: "Reflex Trainer — flicks",
+        focus: "Fast target acquisition + micro-adjust recovery",
+        minutes: 7,
+        tip: "Treat it like intervals: burst of speed, then reset stance and breathing.",
+        icon: "zap",
+        workshopLink: "https://steamcommunity.com/sharedfiles/filedetails/?id=3070244462",
+        workshopLabel: "CS2 Reflex Flick Trainer"
     }
 ];
 
@@ -283,7 +289,8 @@ const ICONS = {
 const routineIcons = {
     crosshair: <Crosshair size={18} style={{ color: "var(--accent)" }} />,
     zap: <Zap size={18} style={{ color: "var(--accent)" }} />,
-    clock: <Clock size={18} style={{ color: "var(--accent)" }} />
+    clock: <Clock size={18} style={{ color: "var(--accent)" }} />,
+    map: <MapPinned size={18} style={{ color: "var(--accent)" }} />
 };
 
 function MainApp() {
@@ -588,6 +595,17 @@ function MainApp() {
                                             {routineIcons[step.icon]}
                                             <span>Lock-in</span>
                                         </span>
+                                    )}
+                                    {step.workshopLink && (
+                                        <a
+                                            href={step.workshopLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="routine-chip routine-link"
+                                        >
+                                            <MapPinned size={14} style={{ color: "var(--muted)" }} />
+                                            <span>{step.workshopLabel || "Workshop map"}</span>
+                                        </a>
                                     )}
                                 </div>
                             </div>
