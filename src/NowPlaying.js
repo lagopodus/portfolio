@@ -1,10 +1,52 @@
-import React, { useEffect, useState } from "react";
-import { Music } from "lucide-react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Music, Heart, Sparkles, Layers } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+
+const LOCAL_STORAGE_KEY = "np:favorites";
+
+const sanitizeSummary = (summary) => summary?.replace(/<[^>]*>/g, "").trim();
 
 export default function NowPlaying({ username, apiKey }) {
     const [track, setTrack] = useState(null);
+    const [meta, setMeta] = useState({ tags: [], lyricSnippet: "" });
+    const [showOverlay, setShowOverlay] = useState(false);
+    const [favorites, setFavorites] = useState(() => {
+        try {
+            const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+            return stored ? JSON.parse(stored) : [];
+        } catch (err) {
+            console.warn("Unable to read favorites", err);
+            return [];
+        }
+    });
+    const lastTrackIdRef = useRef(null);
+    const [changeCount, setChangeCount] = useState(0);
+
+    const activeTrackId = useMemo(() => {
+        if (!track) return null;
+        return `${track.artist} - ${track.name}`;
+    }, [track]);
 
     useEffect(() => {
+        async function fetchTrackMeta(artist, name) {
+            try {
+                const res = await fetch(
+                    `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(name)}&api_key=${apiKey}&format=json`
+                );
+                const data = await res.json();
+                const tags = (data?.track?.toptags?.tag || []).slice(0, 4).map((t) => t.name);
+                const lyricSnippet = sanitizeSummary(data?.track?.wiki?.summary)
+                    ?.split(". ")
+                    .slice(0, 2)
+                    .join(". ") || "";
+
+                setMeta({ tags, lyricSnippet });
+            } catch (err) {
+                console.warn("Unable to fetch track info", err);
+                setMeta({ tags: [], lyricSnippet: "" });
+            }
+        }
+
         async function fetchNowPlaying() {
             try {
                 const res = await fetch(
@@ -16,15 +58,24 @@ export default function NowPlaying({ username, apiKey }) {
                 if (tracks.length > 0) {
                     const current = tracks[0];
                     const isNowPlaying = current["@attr"]?.nowplaying === "true";
-
-                    setTrack({
+                    const nextTrack = {
                         name: current.name,
                         artist: current.artist["#text"],
                         album: current.album["#text"],
                         image: current.image?.[2]?.["#text"],
                         url: current.url,
                         nowPlaying: isNowPlaying,
-                    });
+                    };
+
+                    const nextId = `${nextTrack.artist} - ${nextTrack.name}`;
+
+                    if (nextId !== lastTrackIdRef.current) {
+                        lastTrackIdRef.current = nextId;
+                        setChangeCount((c) => c + 1);
+                        fetchTrackMeta(nextTrack.artist, nextTrack.name);
+                    }
+
+                    setTrack(nextTrack);
                 }
             } catch (err) {
                 console.error("Error fetching now playing:", err);
@@ -34,94 +85,123 @@ export default function NowPlaying({ username, apiKey }) {
         fetchNowPlaying();
         const interval = setInterval(fetchNowPlaying, 10_000);
         return () => clearInterval(interval);
-    }, [username, apiKey]);
+    }, [apiKey, username]);
+
+    const handleSaveFavorite = () => {
+        if (!track) return;
+        const exists = favorites.some((f) => f.id === activeTrackId);
+        if (exists) return;
+        const updated = [...favorites, { id: activeTrackId, ...track }];
+        setFavorites(updated);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+    };
 
     if (!track) return null;
 
     return (
-        <div
-            className="card"
-            style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                padding: 14,
-            }}
-        >
-            {/* Album art */}
-            <div
-                style={{
-                    width: 64,
-                    height: 64,
-                    borderRadius: 8,
-                    overflow: "hidden",
-                    background: "rgba(255,255,255,0.05)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
+        <div className="music-card">
+            <motion.div
+                key={`${activeTrackId}-${changeCount}`}
+                className="music-main"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
             >
-                {track.image ? (
-                    <img
-                        src={track.image}
-                        alt={track.name}
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    />
-                ) : (
-                    <Music size={28} style={{ color: "var(--accent)" }} />
-                )}
-            </div>
-
-            {/* Track info */}
-            <div style={{ flex: 1 }}>
-                <a
-                    href={track.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                        fontWeight: 700,
-                        color: "var(--text)",
-                        textDecoration: "none",
-                    }}
-                >
-                    {track.name}
-                </a>
-                <div style={{ color: "var(--muted)", fontSize: 13 }}>
-                    {track.artist} {track.album ? `· ${track.album}` : ""}
+                <div className="music-cover">
+                    {track.image ? (
+                        <img src={track.image} alt={track.name} />
+                    ) : (
+                        <Music size={28} style={{ color: "var(--accent)" }} />
+                    )}
                 </div>
 
-                {track.nowPlaying ? (
-                    <div
-                        style={{
-                            fontSize: 12,
-                            fontWeight: 700,
-                            marginTop: 2,
-                            color: "var(--accent)",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 6,
-                        }}
-                    >
-                        ▶ Now Playing
-                        <div className="equalizer">
-                            <span />
-                            <span />
-                            <span />
+                <div className="music-body">
+                    <div className="music-title-row">
+                        <a href={track.url} target="_blank" rel="noreferrer" className="music-title">
+                            {track.name}
+                        </a>
+                        <AnimatePresence>
+                            {track.nowPlaying && (
+                                <motion.span
+                                    key="pulse"
+                                    className="music-reaction"
+                                    initial={{ scale: 0.6, opacity: 0 }}
+                                    animate={{ scale: [0.8, 1.05, 1], opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.8, ease: "easeOut" }}
+                                >
+                                    <Sparkles size={16} /> Live
+                                </motion.span>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                    <div className="music-subtitle">
+                        {track.artist} {track.album ? `· ${track.album}` : ""}
+                    </div>
+
+                    {track.nowPlaying ? (
+                        <div className="music-status now">
+                            ▶ Now Playing
+                            <div className="equalizer">
+                                <span />
+                                <span />
+                                <span />
+                            </div>
                         </div>
-                    </div>
-                ) : (
-                    <div
-                        style={{
-                            fontSize: 12,
-                            fontWeight: 700,
-                            marginTop: 2,
-                            color: "var(--muted)",
-                        }}
+                    ) : (
+                        <div className="music-status muted">⏸ Last Listened</div>
+                    )}
+                </div>
+            </motion.div>
+
+            <AnimatePresence>
+                {showOverlay && (meta.tags.length > 0 || meta.lyricSnippet) && (
+                    <motion.div
+                        key={`${activeTrackId}-overlay`}
+                        className="music-overlay"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
                     >
-                        ⏸ Last Listened
-                    </div>
+                        <div className="overlay-label">
+                            <Layers size={14} /> Details
+                        </div>
+                        {meta.lyricSnippet && <p className="overlay-lyrics">“{meta.lyricSnippet}”</p>}
+                        {meta.tags.length > 0 && (
+                            <div className="overlay-tags">
+                                {meta.tags.map((tag) => (
+                                    <span key={tag} className="overlay-tag">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </motion.div>
                 )}
+            </AnimatePresence>
+
+            <div className="music-controls">
+                <button className="ghost-btn" onClick={() => setShowOverlay((v) => !v)}>
+                    <Layers size={14} /> {showOverlay ? "Hide details" : "Show details"}
+                </button>
+                <button className="favorite-btn" onClick={handleSaveFavorite} disabled={!track}>
+                    <Heart size={14} /> Save track
+                </button>
             </div>
+
+            {favorites.length > 0 && (
+                <div className="favorite-row">
+                    <span className="favorite-label">Favorites:</span>
+                    <div className="favorite-list">
+                        {favorites.map((fav) => (
+                            <span key={fav.id} className="favorite-chip">
+                                {fav.artist} — {fav.name}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <style>{`
                 .equalizer {
