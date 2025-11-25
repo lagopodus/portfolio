@@ -1,13 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
+import {
+    Gem,
+    Star,
+    Grape,
+    Crown,
+    Bell,
+    Moon,
+} from "lucide-react";
 
 const SYMBOLS = [
-    { icon: "💎", label: "Gem" },
-    { icon: "⭐", label: "Star" },
-    { icon: "🍇", label: "Grape" },
-    { icon: "7️⃣", label: "Seven" },
-    { icon: "🔔", label: "Bell" },
-    { icon: "🌙", label: "Moon" },
+    { icon: Gem, label: "Gem" },
+    { icon: Star, label: "Star" },
+    { icon: Grape, label: "Grape" },
+    { icon: Crown, label: "Crown" },   // or CircleNumber7 if you have it
+    { icon: Bell, label: "Bell" },
+    { icon: Moon, label: "Moon" },
 ];
+
 
 const getRandomSymbol = () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
 
@@ -81,10 +90,9 @@ export default function SlotMachine() {
     return (
         <div className="slot-machine">
             <div className="slot-header">
-                <span className="slot-led">NEON SPIN</span>
+                <span className="slot-led">ARCADE MACHINE</span>
                 <div className="slot-status">
                     <span className="slot-pip" data-active={spinning}></span>
-                    <span className="slot-label">Purple-mode</span>
                 </div>
             </div>
 
@@ -103,8 +111,9 @@ export default function SlotMachine() {
                             key={i}
                             className={`slot-reel ${spinning ? "slot-reel--spinning" : ""}`}
                         >
-                            <div className="slot-cell">{symbol.icon}</div>
-                            <div className="slot-sub">{symbol.label}</div>
+                            <div className="slot-cell">
+                                <symbol.icon className="slot-icon"/>
+                            </div>
                         </div>
                     ))}
                 </div>

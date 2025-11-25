@@ -616,9 +616,6 @@ function MainApp() {
 
                 <MotionCard className="card slot-card">
                     <h2 className="section-title gradient-text">Arcade</h2>
-                    <p className="text" style={{ marginTop: 4 }}>
-                        A purple neon slot machine, inspired by the visit counter's glow.
-                    </p>
                     <SlotMachine />
                 </MotionCard>
 
