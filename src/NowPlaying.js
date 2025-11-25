@@ -87,32 +87,14 @@ export default function NowPlaying({ username, apiKey }) {
         return () => clearInterval(interval);
     }, [apiKey, username]);
 
-    const handleToggleFavorite = () => {
+    const handleSaveFavorite = () => {
         if (!track) return;
         const exists = favorites.some((f) => f.id === activeTrackId);
-
-        if (exists) {
-            const updated = favorites.filter((f) => f.id !== activeTrackId);
-            setFavorites(updated);
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
-            return;
-        }
-
+        if (exists) return;
         const updated = [...favorites, { id: activeTrackId, ...track }];
         setFavorites(updated);
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
     };
-
-    const handleRemoveFavorite = (id) => {
-        const updated = favorites.filter((f) => f.id !== id);
-        setFavorites(updated);
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
-    };
-
-    const isActiveTrackFavorite = useMemo(
-        () => favorites.some((f) => f.id === activeTrackId),
-        [favorites, activeTrackId]
-    );
 
     if (!track) return null;
 
@@ -203,12 +185,8 @@ export default function NowPlaying({ username, apiKey }) {
                 <button className="ghost-btn" onClick={() => setShowOverlay((v) => !v)}>
                     <Layers size={14} /> {showOverlay ? "Hide details" : "Show details"}
                 </button>
-                <button
-                    className={`favorite-btn ${isActiveTrackFavorite ? "favorite-btn--active" : ""}`}
-                    onClick={handleToggleFavorite}
-                    disabled={!track}
-                >
-                    <Heart size={14} /> {isActiveTrackFavorite ? "Unfavorite" : "Save track"}
+                <button className="favorite-btn" onClick={handleSaveFavorite} disabled={!track}>
+                    <Heart size={14} /> Save track
                 </button>
             </div>
 
@@ -219,13 +197,6 @@ export default function NowPlaying({ username, apiKey }) {
                         {favorites.map((fav) => (
                             <span key={fav.id} className="favorite-chip">
                                 {fav.artist} — {fav.name}
-                                <button
-                                    className="favorite-chip-remove"
-                                    aria-label={`Remove ${fav.name} from favorites`}
-                                    onClick={() => handleRemoveFavorite(fav.id)}
-                                >
-                                    ×
-                                </button>
                             </span>
                         ))}
                     </div>
