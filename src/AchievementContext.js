@@ -3,9 +3,13 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 const AchievementContext = createContext();
 
 export function AchievementsProvider({ children, initialAchievements }) {
-    const [achievements, setAchievements] = useState(
-        JSON.parse(localStorage.getItem("achievements")) || initialAchievements
-    );
+    const [achievements, setAchievements] = useState(() => {
+        const stored = JSON.parse(localStorage.getItem("achievements"));
+        if (!stored) return initialAchievements;
+
+        const storedById = Object.fromEntries(stored.map((a) => [a.id, a]));
+        return initialAchievements.map((ach) => storedById[ach.id] ? { ...ach, ...storedById[ach.id] } : ach);
+    });
     const [lastUnlocked, setLastUnlocked] = useState(null);
 
     const unlock = (id) => {
