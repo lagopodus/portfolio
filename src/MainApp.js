@@ -32,7 +32,9 @@ import {
     Lock,
     BookHeart,
     BadgeQuestionMark,
-    MapPinned
+    MapPinned,
+    Crown,
+    Quote,
 } from "lucide-react";
 import "./App.css";
 import BurgerMenu from "./BurgerMenu";
@@ -250,6 +252,13 @@ export const ACHIEVEMENTS = [
         unlocked: false
     },
     {
+        id: "jackpot",
+        title: "Jackpot!",
+        desc: "Hit triple symbols on the slot machine",
+        icon: "crown",
+        unlocked: false
+    },
+    {
         id: "ten-visits",
         title: "Regular Visitor",
         desc: "Visited the site 10 times",
@@ -261,6 +270,13 @@ export const ACHIEVEMENTS = [
         title: "AFK",
         desc: "Stayed idle on the site for 2+ minutes",
         icon: "clock",
+        unlocked: false
+    },
+    {
+        id: "quote-collector",
+        title: "Quote Collector",
+        desc: "Seen every About quote at least once",
+        icon: "quote",
         unlocked: false
     },
     {
@@ -284,6 +300,8 @@ const ICONS = {
     star: <Star size={20} style={{ color: "#facc15" }} />,   // yellow/golden star
     clock: <Clock size={20} style={{ color: "#60a5fa" }} />, // blue clock
     question: <BadgeQuestionMark size={20} style={{ color: "#fff" }} />, // blue clock
+    crown: <Crown size={20} style={{ color: "#fbbf24" }} />,
+    quote: <Quote size={20} style={{ color: "#38bdf8" }} />,
 
 };
 
@@ -296,6 +314,10 @@ const routineIcons = {
 
 function MainApp() {
     const [aboutText, setAboutText] = useState(null);
+    const [, setSeenQuotes] = useState(() => {
+        const stored = JSON.parse(localStorage.getItem("seenQuotes") || "[]");
+        return Array.isArray(stored) ? stored : [];
+    });
     const { achievements, unlock, lastUnlocked, setLastUnlocked } = useAchievements();
     const allUnlocked = achievements.every((a) => a.unlocked);
     const [theme, setTheme] = useState("dark");
@@ -389,7 +411,16 @@ function MainApp() {
     useEffect(() => {
         const random = aboutTexts[Math.floor(Math.random() * aboutTexts.length)];
         setAboutText(random);
-    }, []);
+        setSeenQuotes((prev) => {
+            const next = Array.from(new Set([...prev, random.quote]));
+            localStorage.setItem("seenQuotes", JSON.stringify(next));
+
+            if (next.length === aboutTexts.length) {
+                unlock("quote-collector");
+            }
+            return next;
+        });
+    }, [unlock]);
     useEffect(() => {
         const handleScroll = () => {
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {

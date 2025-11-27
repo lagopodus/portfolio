@@ -7,6 +7,7 @@ import {
     Bell,
     Moon,
 } from "lucide-react";
+import { useAchievements } from "./AchievementContext";
 
 const SYMBOLS = [
     { icon: Gem, label: "Gem" },
@@ -25,6 +26,7 @@ export default function SlotMachine() {
     const [spinning, setSpinning] = useState(false);
     const [message, setMessage] = useState("Tap spin to light up the reels");
     const [result, setResult] = useState(null);
+    const { unlock } = useAchievements();
     const timersRef = useRef({ intervals: [], timeouts: [] });
 
     const clearTimers = () => {
@@ -71,6 +73,7 @@ export default function SlotMachine() {
                     if (allSame) {
                         setResult("win");
                         setMessage("JACKPOT! Triple glow-up ✨");
+                        unlock("jackpot");
                     } else if (twoSame) {
                         setResult("near");
                         setMessage("Close! Two of a kind flickered on.");
