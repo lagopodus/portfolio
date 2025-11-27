@@ -42,6 +42,20 @@ const achievements = [
         unlocked: false
     },
     {
+        id: "lore-hunter",
+        title: "Lore Hunter",
+        desc: "Opened multiple favourite game breakdowns",
+        icon: "map",
+        unlocked: false
+    },
+    {
+        id: "jackpot",
+        title: "Jackpot!",
+        desc: "Hit triple symbols on the slot machine",
+        icon: "crown",
+        unlocked: false
+    },
+    {
         id: "ten-visits",
         title: "Regular Visitor",
         desc: "Visited the site 10 times",
@@ -53,6 +67,13 @@ const achievements = [
         title: "AFK",
         desc: "Stayed idle on the site for 2+ minutes",
         icon: "clock",
+        unlocked: false
+    },
+    {
+        id: "quote-collector",
+        title: "Quote Collector",
+        desc: "Seen every About quote at least once",
+        icon: "quote",
         unlocked: false
     },
     {

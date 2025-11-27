@@ -115,7 +115,7 @@ const responses = {
     work: "Right now focusing on projects & learning 👨‍💻",
     hobbies: "Gaming, coding, and car stuff 🚗💨",
     sport: "Mostly esports, but gym sometimes 💪",
-    car: "2001 Mazda MX-5 NB 🚘",
+    car: "2001 Mazda MX-5 NB 🚘 (RIP)",
     dream: "Dream setup? Already halfway there with my rig 🖥️",
 };
 export default responses;
