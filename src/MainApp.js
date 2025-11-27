@@ -408,18 +408,34 @@ function MainApp() {
             unlock("ten-visits");
         }
     }, []);
-    useEffect(() => {
-        const random = aboutTexts[Math.floor(Math.random() * aboutTexts.length)];
-        setAboutText(random);
-        setSeenQuotes((prev) => {
-            const next = Array.from(new Set([...prev, random.quote]));
-            localStorage.setItem("seenQuotes", JSON.stringify(next));
+    const rollAboutQuote = () => {
+        setAboutText((current) => {
+            if (aboutTexts.length === 0) return current;
 
-            if (next.length === aboutTexts.length) {
-                unlock("quote-collector");
+            let nextQuote = aboutTexts[Math.floor(Math.random() * aboutTexts.length)];
+
+            if (aboutTexts.length > 1) {
+                while (nextQuote.quote === current?.quote) {
+                    nextQuote = aboutTexts[Math.floor(Math.random() * aboutTexts.length)];
+                }
             }
-            return next;
+
+            setSeenQuotes((prev) => {
+                const next = Array.from(new Set([...prev, nextQuote.quote]));
+                localStorage.setItem("seenQuotes", JSON.stringify(next));
+
+                if (next.length === aboutTexts.length) {
+                    unlock("quote-collector");
+                }
+                return next;
+            });
+
+            return nextQuote;
         });
+    };
+
+    useEffect(() => {
+        rollAboutQuote();
     }, [unlock]);
     useEffect(() => {
         const handleScroll = () => {
@@ -524,7 +540,7 @@ function MainApp() {
                         <div style={{flex: 1, minWidth: 280}}>
                             <h3 className="section-title gradient-text">About</h3>
                             {aboutText && (
-                                <p className="text">
+                                <p className="text quote-refresh" onClick={rollAboutQuote}>
                                     <i>{aboutText.quote}<br/></i>
                                     <b>- {aboutText.author}</b>
                                 </p>
