@@ -1,0 +1,14 @@
+.ripple-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple-ring {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid rgba(100, 149, 237, 0.15);
+    background: transparent;
+    pointer-events: none;
+}
