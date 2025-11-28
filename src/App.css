@@ -139,6 +139,15 @@
   line-height: 1.5;
 }
 
+.quote-refresh {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.quote-refresh:hover {
+  color: var(--text);
+}
+
 .cta-primary {
   display: inline-flex;
   align-items: center;
