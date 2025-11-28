@@ -1095,7 +1095,10 @@
   width: 80%;          /* not fixed px */
   max-width: 280px;
   z-index: 1200;
-  padding: 32px 24px;
+  padding: 24px 18px;
+
+  max-height: 100vh;
+  overflow: hidden;
 
   /* Premium frosted look */
   background: linear-gradient(
@@ -1113,18 +1116,18 @@
 
 /* Section links */
 .menu-link {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   text-align: left;
   color: var(--text);
   background: none;
   border: none;
-  padding: 14px 12px;
+  padding: 12px 10px;
   cursor: pointer;
   transition: all 0.25s ease;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   border-radius: 12px;
 }
 
@@ -1150,8 +1153,8 @@
 /* Theme button (bottom) */
 .theme-btn {
   min-width: 120px;
-  height: 56px;
-  border-radius: 14px;
+  height: 52px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   cursor: pointer;
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.22), rgba(255, 255, 255, 0.08));
@@ -1162,8 +1165,8 @@
   transition: all 0.3s ease;
   box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.14),
   0 8px 24px rgba(0, 0, 0, 0.3);
-  margin-bottom: 30px;
-  padding: 0 16px;
+  margin-bottom: 16px;
+  padding: 0 14px;
   gap: 10px;
 }
 
@@ -1246,7 +1249,7 @@
   text-transform: uppercase;
   color: var(--accent);
   letter-spacing: 2px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 6px;
 }
@@ -1258,7 +1261,7 @@
 .menu-header {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 50px;
+  margin-bottom: 28px;
 }
 
 .close-btn {
@@ -1272,7 +1275,11 @@
 .menu-nav {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+  max-height: calc(100vh - 190px);
 }
 
 

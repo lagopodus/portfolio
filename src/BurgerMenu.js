@@ -37,17 +37,17 @@ export default function BurgerMenu({ toggleTheme, theme }) {
     ];
 
     const ICONS = {
-        about: <User size={18} />,   // GitHub purple
-        music: <Music size={18} />,      // stays gold
-        projects: <Folders size={18}  />, // keep red
-        stats: <ChartLine size={18}  />, // light blue (accuracy vibe)
-        warmup: <Flame size={18} />, // warmup heat
-        arcade: <Joystick size={18}  />, // arcade vibes
-        friends: <Users size={18}  />,       // green (friendly)
-        youtube: <Youtube size={18} />, // video feed
-        setup: <Laptop size={18} />, // violet/purple (taste/favorites)
-        achievements: <Trophy size={18} />,        // locked = gray
-        games: <Gamepad2 size={18}  />,   // yellow/golden star
+        about: <User size={16} />,   // GitHub purple
+        music: <Music size={16} />,      // stays gold
+        projects: <Folders size={16}  />, // keep red
+        stats: <ChartLine size={16}  />, // light blue (accuracy vibe)
+        warmup: <Flame size={16} />, // warmup heat
+        arcade: <Joystick size={16}  />, // arcade vibes
+        friends: <Users size={16}  />,       // green (friendly)
+        youtube: <Youtube size={16} />, // video feed
+        setup: <Laptop size={16} />, // violet/purple (taste/favorites)
+        achievements: <Trophy size={16} />,        // locked = gray
+        games: <Gamepad2 size={16}  />,   // yellow/golden star
     };
 
     const handleScroll = (id) => {
