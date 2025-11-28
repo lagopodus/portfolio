@@ -425,7 +425,7 @@ function MainApp() {
                 localStorage.setItem("seenQuotes", JSON.stringify(next));
 
                 if (next.length === aboutTexts.length) {
-                    unlock("quote-collector");
+                    unlockRef.current("quote-collector");
                 }
                 return next;
             });
@@ -436,7 +436,8 @@ function MainApp() {
 
     useEffect(() => {
         rollAboutQuote();
-    }, [unlock]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     useEffect(() => {
         const handleScroll = () => {
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
