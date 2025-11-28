@@ -13,7 +13,10 @@ import {
     ChartLine,
     Users,
     Laptop,
-    Gamepad2
+    Gamepad2,
+    Flame,
+    Joystick,
+    Youtube
 } from "lucide-react";
 
 export default function BurgerMenu({ toggleTheme, theme }) {
@@ -24,7 +27,10 @@ export default function BurgerMenu({ toggleTheme, theme }) {
         { id: "music", label: "Music" },
         { id: "projects", label: "Projects" },
         { id: "stats", label: "Stats" },
+        { id: "warmup", label: "Warmup Routine" },
+        { id: "arcade", label: "Arcade" },
         { id: "friends", label: "Friends" },
+        { id: "youtube", label: "Latest YouTube videos" },
         { id: "setup", label: "Setup" },
         { id: "achievements", label: "Achievements" },
         { id: "games", label: "Favourite Games" },
@@ -35,7 +41,10 @@ export default function BurgerMenu({ toggleTheme, theme }) {
         music: <Music size={20} />,      // stays gold
         projects: <Folders size={20}  />, // keep red
         stats: <ChartLine size={20}  />, // light blue (accuracy vibe)
+        warmup: <Flame size={20} />, // warmup heat
+        arcade: <Joystick size={20}  />, // arcade vibes
         friends: <Users size={20}  />,       // green (friendly)
+        youtube: <Youtube size={20} />, // video feed
         setup: <Laptop size={20} />, // violet/purple (taste/favorites)
         achievements: <Trophy size={20} />,        // locked = gray
         games: <Gamepad2 size={20}  />,   // yellow/golden star

@@ -619,7 +619,7 @@ function MainApp() {
                     </div>
                 </MotionCard>
 
-                <MotionCard className="card routine-card">
+                <MotionCard id="warmup" className="card routine-card">
                     <h2 className="section-title gradient-text">Warmup Routine</h2>
                     <div className="routine-steps">
                         {warmupRoutine.map((step) => (
@@ -662,7 +662,7 @@ function MainApp() {
                     </div>
                 </MotionCard>
 
-                <MotionCard className="card slot-card">
+                <MotionCard id="arcade" className="card slot-card">
                     <h2 className="section-title gradient-text">Arcade</h2>
                     <SlotMachine />
                 </MotionCard>
