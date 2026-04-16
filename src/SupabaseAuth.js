@@ -18,20 +18,6 @@ export default function SupabaseAuth() {
 
     const isLoggedIn = Boolean(session?.user);
 
-    if (!hasSupabaseConfig) {
-        return (
-            <section className="auth-card">
-                <div className="auth-card__header">
-                    <h2>Supabase Account</h2>
-                    <p>Missing setup</p>
-                </div>
-                <p className="auth-card__status auth-card__status--warn">
-                    Add REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_PUBLISHABLE_KEY to your .env file, then restart the dev server.
-                </p>
-            </section>
-        );
-    }
-
     async function loadProfile() {
         try {
             const profileData = await getMyProfile();
@@ -43,6 +29,8 @@ export default function SupabaseAuth() {
     }
 
     useEffect(() => {
+        if (!hasSupabaseConfig || !supabase) return;
+
         let cancelled = false;
 
         async function boot() {
@@ -72,6 +60,8 @@ export default function SupabaseAuth() {
     }, []);
 
     useEffect(() => {
+        if (!hasSupabaseConfig) return;
+
         if (!isLoggedIn) {
             setProfile(null);
             return;
@@ -121,6 +111,8 @@ export default function SupabaseAuth() {
     }
 
     async function handleLogout() {
+        if (!supabase) return;
+
         setLoading(true);
         setStatus("");
 
@@ -134,6 +126,20 @@ export default function SupabaseAuth() {
         } finally {
             setLoading(false);
         }
+    }
+
+    if (!hasSupabaseConfig) {
+        return (
+            <section className="auth-card">
+                <div className="auth-card__header">
+                    <h2>Supabase Account</h2>
+                    <p>Missing setup</p>
+                </div>
+                <p className="auth-card__status auth-card__status--warn">
+                    Add REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_PUBLISHABLE_KEY to your .env file, then restart the dev server.
+                </p>
+            </section>
+        );
     }
 
     return (
