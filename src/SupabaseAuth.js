@@ -128,28 +128,18 @@ export default function SupabaseAuth() {
         }
     }
 
-    if (!hasSupabaseConfig) {
-        return (
-            <section className="auth-card">
-                <div className="auth-card__header">
-                    <h2>Supabase Account</h2>
-                    <p>Missing setup</p>
-                </div>
-                <p className="auth-card__status auth-card__status--warn">
-                    Add REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_PUBLISHABLE_KEY to your .env file, then restart the dev server.
-                </p>
-            </section>
-        );
-    }
-
     return (
         <section className="auth-card">
             <div className="auth-card__header">
                 <h2>Supabase Account</h2>
-                <p>Login + credit displayer</p>
+                <p>{hasSupabaseConfig ? "Login + credit displayer" : "Missing setup"}</p>
             </div>
 
-            {!isLoggedIn ? (
+            {!hasSupabaseConfig ? (
+                <p className="auth-card__status auth-card__status--warn">
+                    Add REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_PUBLISHABLE_KEY to your .env file, then restart the dev server.
+                </p>
+            ) : !isLoggedIn ? (
                 <>
                     <div className="auth-card__tabs">
                         <button
