@@ -1557,3 +1557,89 @@ html, body {
   transform: translateY(0) scale(0.98);
   box-shadow: 0 4px 14px rgba(168, 85, 247, 0.2);
 }
+
+.auth-card {
+    max-width: 680px;
+    margin: 1.5rem auto;
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+    background: rgba(16, 20, 32, 0.75);
+    backdrop-filter: blur(10px);
+}
+
+.auth-card__header h2 {
+    margin: 0;
+}
+
+.auth-card__header p {
+    margin: 0.35rem 0 1rem;
+    color: #c8d0e0;
+}
+
+.auth-card__tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.auth-card__tabs button,
+.auth-card__form button,
+.auth-card__actions button {
+    border: none;
+    border-radius: 10px;
+    padding: 0.6rem 0.95rem;
+    background: #2e60f7;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.auth-card__tabs button {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.auth-card__tabs button.active {
+    background: #2e60f7;
+}
+
+.auth-card__form {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.auth-card__form label {
+    display: grid;
+    gap: 0.35rem;
+    font-weight: 600;
+}
+
+.auth-card__form input {
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 0.55rem 0.7rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.auth-card__profile {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.auth-card__credit {
+    font-size: 1.2rem;
+}
+
+.auth-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.auth-card__status {
+    margin-top: 0.85rem;
+    color: #a7f3d0;
+}
+
+.auth-card__status--warn { color: #facc15; }
