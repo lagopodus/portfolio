@@ -37,17 +37,17 @@ export default function BurgerMenu({ toggleTheme, theme }) {
     ];
 
     const ICONS = {
-        about: <User size={20} />,   // GitHub purple
-        music: <Music size={20} />,      // stays gold
-        projects: <Folders size={20}  />, // keep red
-        stats: <ChartLine size={20}  />, // light blue (accuracy vibe)
-        warmup: <Flame size={20} />, // warmup heat
-        arcade: <Joystick size={20}  />, // arcade vibes
-        friends: <Users size={20}  />,       // green (friendly)
-        youtube: <Youtube size={20} />, // video feed
-        setup: <Laptop size={20} />, // violet/purple (taste/favorites)
-        achievements: <Trophy size={20} />,        // locked = gray
-        games: <Gamepad2 size={20}  />,   // yellow/golden star
+        about: <User size={16} />,   // GitHub purple
+        music: <Music size={16} />,      // stays gold
+        projects: <Folders size={16}  />, // keep red
+        stats: <ChartLine size={16}  />, // light blue (accuracy vibe)
+        warmup: <Flame size={16} />, // warmup heat
+        arcade: <Joystick size={16}  />, // arcade vibes
+        friends: <Users size={16}  />,       // green (friendly)
+        youtube: <Youtube size={16} />, // video feed
+        setup: <Laptop size={16} />, // violet/purple (taste/favorites)
+        achievements: <Trophy size={16} />,        // locked = gray
+        games: <Gamepad2 size={16}  />,   // yellow/golden star
     };
 
     const handleScroll = (id) => {
@@ -127,16 +127,11 @@ export default function BurgerMenu({ toggleTheme, theme }) {
                                         onClick={() => handleScroll(s.id)}
                                         className="menu-link"
                                         variants={linkVariants}
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 8, // 👈 space between icon & text
-                                        }}
                                     >
-        <span style={{ fontSize: 16, display: "flex", alignItems: "center" }}>
-          {React.cloneElement(ICONS[s.id], { size: 16 })}
-        </span>
-                                        <span>{s.label}</span>
+                                        <span className="menu-icon">
+                                            {ICONS[s.id]}
+                                        </span>
+                                        <span className="menu-text">{s.label}</span>
                                     </motion.button>
 
                                     {/* Premium separator */}
@@ -158,13 +153,22 @@ export default function BurgerMenu({ toggleTheme, theme }) {
                         <div className="menu-spacer"/>
 
                         {/* Theme toggle */}
-                        <motion.button
-                            onClick={toggleTheme}
-                            className="theme-btn"
-                            variants={linkVariants}
-                        >
-                            {theme === "dark" ? <Sun size={22}/> : <Moon size={22}/>}
-                        </motion.button>
+                        <div className="theme-section">
+                            <div className="theme-copy">
+                                <span className="theme-label">Theme</span>
+                                <span className="theme-helper">Switch between vibes</span>
+                            </div>
+                            <motion.button
+                                onClick={toggleTheme}
+                                className="theme-btn"
+                                variants={linkVariants}
+                            >
+                                <span className="theme-icon">
+                                    {theme === "dark" ? <Sun size={22}/> : <Moon size={22}/>}
+                                </span>
+                                <span className="theme-text">{theme === "dark" ? "Light" : "Dark"}</span>
+                            </motion.button>
+                        </div>
                     </motion.aside>
                 )}
             </AnimatePresence>
