@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 
 const AchievementContext = createContext();
 
@@ -12,7 +12,7 @@ export function AchievementsProvider({ children, initialAchievements }) {
     });
     const [lastUnlocked, setLastUnlocked] = useState(null);
 
-    const unlock = (id) => {
+    const unlock = useCallback((id) => {
         setAchievements((prev) => {
             const updated = prev.map((a) =>
                 a.id === id && !a.unlocked ? { ...a, unlocked: true } : a
@@ -25,15 +25,19 @@ export function AchievementsProvider({ children, initialAchievements }) {
             }
             return updated;
         });
-    };
+    }, []);
 
 
     useEffect(() => {
         localStorage.setItem("achievements", JSON.stringify(achievements));
     }, [achievements]);
 
+    const contextValue = useMemo(() => (
+        { achievements, unlock, lastUnlocked, setLastUnlocked }
+    ), [achievements, unlock, lastUnlocked]);
+
     return (
-        <AchievementContext.Provider value={{ achievements, unlock, lastUnlocked, setLastUnlocked }}>
+        <AchievementContext.Provider value={contextValue}>
             {children}
         </AchievementContext.Provider>
     );
