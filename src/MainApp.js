@@ -39,6 +39,7 @@ import {
 import "./App.css";
 import BurgerMenu from "./BurgerMenu";
 import { motion, useMotionValue, useTransform, animate  } from "framer-motion";
+import SpotlightCarousel from "./SpotlightCarousel";
 const getPremierColor = (rank) => {
     if (rank < 5000) return "grey";
     if (rank < 10000) return "lightblue";
@@ -198,6 +199,41 @@ const favouriteGames = [
         loadout: "Hunting Pistol + Devastator + Void armor",
         tip: "Dodge diagonally through boss swipes; stagger windows open up when you mix mod power with weak-spot discipline.",
         url: "https://store.steampowered.com/app/617290/Remnant_From_the_Ashes/"
+    }
+];
+
+const spotlightItems = [
+    {
+        title: "Live build + banter on Twitch",
+        tag: "Streaming",
+        description: "Hang out while I ship features, review code, and talk esports.",
+        cta: "Join the stream",
+        link: "https://www.twitch.tv/lagopodus",
+        icon: <Zap size={16}/>
+    },
+    {
+        title: "CS2 strats + VOD reviews",
+        tag: "Coaching",
+        description: "Breakdowns of executes, utility lineups, and ranked mental prep.",
+        cta: "Peek the notes",
+        link: "https://docs.google.com/document/d/1UrQOZ5tujT9YcG38lG9EBDbHXx0Tvhv1VdWAh6X8YdQ/edit",
+        icon: <MapPinned size={16}/>
+    },
+    {
+        title: "Hardware stack + setup logs",
+        tag: "Setup",
+        description: "Monitors, gear tweaks, and performance experiments for low latency.",
+        cta: "View the rig",
+        link: "https://github.com/lagopodus/portfolio#hardware",
+        icon: <Cpu size={16}/>
+    },
+    {
+        title: "Open source portfolio roadmap",
+        tag: "Changelog",
+        description: "Follow along as I iterate on this site and ship quality-of-life updates.",
+        cta: "See the roadmap",
+        link: "https://github.com/lagopodus/portfolio",
+        icon: <Star size={16}/>
     }
 ];
 
@@ -523,6 +559,8 @@ function MainApp() {
                             <Instagram size={16}/> <span style={{marginLeft: 8}}>Instagram</span>
                         </a>
                     </div>
+
+                    <SpotlightCarousel items={spotlightItems} />
                 </section>
                 <AchievementPopup
                     achievement={lastUnlocked}
