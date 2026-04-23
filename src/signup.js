@@ -1,11 +1,12 @@
-import { supabase } from './supabase'
+import { assertSupabase } from "./supabase";
 
 export async function signUp(email, password) {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password
-  })
+    const client = assertSupabase();
+    const { data, error } = await client.auth.signUp({
+        email,
+        password
+    });
 
-  if (error) throw error
-  return data
+    if (error) throw error;
+    return data;
 }
